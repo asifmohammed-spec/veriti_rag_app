@@ -1,0 +1,41 @@
+Best prompts to test this project
+These are the most useful prompts because they match the actual rules and examples in evaluation/retrieval_eval.jsonl, README.md, and the knowledge base files like knowledge_base/maven_demo/drc_rules.yml.
+
+High-value retrieval prompts
+Which rule checks that won deals have revenue recorded?
+How do I fix deals that reference accounts we don't have?
+How is win rate defined?
+Which business driver depends on DRC-CONS-001?
+What does DRC-INTG-001 validate?
+What is the fail condition for DRC-COMP-002?
+Which rule enforces valid deal stages?
+How do I remediate missing close values on won deals?
+Good “business question” prompts
+How many won deals have no close value?
+Which deals are missing a close value?
+What is the win rate formula?
+Which sales pipeline issues are integrity-related?
+Are there any rules tied to revenue reporting?
+Which data quality checks depend on the accounts table?
+Strong debug prompts for this notebook
+DRC-COMP-002 won deals missing close value
+close value missing on won deals
+sales pipeline integrity issue
+business driver revenue_reporting
+invalid date sequence in sales pipeline
+deal stage must be one of Prospecting, Engaging, Won, Lost
+Good prompt variations to test retrieval quality
+"won deals missing close value"
+"close value"
+"sales pipeline"
+"DRC-COMP-002"
+"win rate"
+"accounts table validation"
+"revenue reporting rule"
+The most reliable ones for this app are the exact phrasing from the sample eval file, especially:
+
+Which rule checks that won deals have revenue recorded?
+How do I fix deals that reference accounts we don't have?
+How is win rate defined?
+Which business driver depends on DRC-CONS-001?
+If you want, I can give you:

@@ -17,7 +17,7 @@ class Settings:
     client_id: str = _e("VERITI_CLIENT_ID", "maven_demo")
     # OpenRouter (OpenAI-compatible) for both chat and embeddings
     base_url: str = _e("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
-    llm_model: str = _e("VERITI_MODEL", "anthropic/claude-opus-5.5")
+    llm_model: str = _e("VERITI_MODEL", "deepseek/deepseek-v4.1-flash")
     embed_model: str = _e("VERITI_EMBED_MODEL", "openai/text-embedding-3-small")
     embeddings: str = _e("VERITI_EMBEDDINGS", "openrouter")  # or "hash" (offline, tests only)
     # chunking / retrieval
