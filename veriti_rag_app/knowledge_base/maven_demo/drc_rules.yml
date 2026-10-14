@@ -1,0 +1,33 @@
+rules:
+  - id: DRC-COMP-002
+    description: Won deals must have a close value
+    table: sales_pipeline
+    column: close_value
+    dimension: completeness
+    severity: critical
+    bsd: revenue_reporting
+    fail_condition: "deal_stage = 'Won' AND close_value IS NULL"
+  - id: DRC-CONS-001
+    description: Close date must not be before engage date
+    table: sales_pipeline
+    column: close_date
+    dimension: consistency
+    severity: high
+    bsd: sales_cycle_analysis
+    fail_condition: "close_date < engage_date"
+  - id: DRC-INTG-001
+    description: Every account on a deal must exist in the accounts table
+    table: sales_pipeline
+    column: account
+    dimension: integrity
+    severity: critical
+    bsd: pipeline_visibility
+    fail_condition: "account NOT IN (SELECT account FROM accounts)"
+  - id: DRC-VALD-002
+    description: Deal stage must be one of Prospecting, Engaging, Won, Lost
+    table: sales_pipeline
+    column: deal_stage
+    dimension: validity
+    severity: medium
+    bsd: pipeline_visibility
+    fail_condition: "deal_stage NOT IN ('Prospecting','Engaging','Won','Lost')"

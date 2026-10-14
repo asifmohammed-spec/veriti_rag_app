@@ -1,0 +1,6 @@
+client_column,veriti_concept,status,rationale
+opportunity_id,deal_id,confirmed,Unique identifier for each sales opportunity
+deal_stage,deal_stage,confirmed,Pipeline stage of the opportunity
+close_value,deal_amount,confirmed,Revenue value once the deal is won
+close_date,deal_closed_date,confirmed,Date the deal was won or lost
+account,company_ref,suggested,Free-text company name; no stable company id exists in this source

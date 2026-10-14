@@ -1,0 +1,35 @@
+dataset: maven_crm
+tables:
+  accounts:
+    primary_key: account
+    columns:
+      account: {type: VARCHAR, required: true, description: Customer company name}
+      sector: {type: VARCHAR, required: false, description: Industry sector}
+      year_established: {type: INTEGER, required: false}
+  products:
+    primary_key: product
+    columns:
+      product: {type: VARCHAR, required: true}
+      series: {type: VARCHAR, required: false}
+      sales_price: {type: DOUBLE, required: false, description: List price, not realised deal value}
+  sales_teams:
+    primary_key: sales_agent
+    columns:
+      sales_agent: {type: VARCHAR, required: true}
+      manager: {type: VARCHAR, required: false}
+      regional_office: {type: VARCHAR, required: false}
+  sales_pipeline:
+    primary_key: opportunity_id
+    foreign_keys:
+      - {column: account, references: accounts.account}
+      - {column: product, references: products.product}
+      - {column: sales_agent, references: sales_teams.sales_agent}
+    columns:
+      opportunity_id: {type: VARCHAR, required: true}
+      sales_agent: {type: VARCHAR, required: true}
+      product: {type: VARCHAR, required: true}
+      account: {type: VARCHAR, required: false}
+      deal_stage: {type: VARCHAR, required: true, description: "Prospecting, Engaging, Won or Lost"}
+      engage_date: {type: DATE, required: false}
+      close_date: {type: DATE, required: false}
+      close_value: {type: DOUBLE, required: false, description: Revenue of a Won deal}

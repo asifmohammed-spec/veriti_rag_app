@@ -1,0 +1,11 @@
+table,column,veriti_concept,description
+sales_pipeline,opportunity_id,deal_id,Unique identifier of a sales opportunity. Primary key.
+sales_pipeline,deal_stage,deal_stage,Pipeline stage: Prospecting and Engaging are open; Won and Lost are closed.
+sales_pipeline,close_value,deal_amount,Revenue of the deal once Won. Expected empty for open and Lost deals. Use for revenue and win value.
+sales_pipeline,engage_date,deal_engaged_date,Date the opportunity entered the Engaging stage.
+sales_pipeline,close_date,deal_closed_date,Date the opportunity was Won or Lost. Must not be earlier than engage_date.
+sales_pipeline,account,company_ref,Foreign key to accounts.account. The customer company.
+sales_pipeline,sales_agent,deal_owner,Foreign key to sales_teams.sales_agent. The owner of the deal.
+sales_teams,manager,owner_manager,Manager of the sales agent. Use to roll up performance by manager.
+sales_teams,regional_office,owner_region,Regional office of the agent. Use to roll up performance by region.
+products,sales_price,product_list_price,List price of the product. Not the realised deal value.

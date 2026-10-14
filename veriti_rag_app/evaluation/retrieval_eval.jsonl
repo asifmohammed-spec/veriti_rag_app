@@ -1,0 +1,7 @@
+{"question": "Which rule checks that won deals have revenue recorded?", "expected": [{"source": "drc_rules.yml", "contains": "DRC-COMP-002"}]}
+{"question": "How do I fix deals that reference accounts we don't have?", "expected": [{"source": "remediation_guide.md", "contains": "DRC-INTG-001"}]}
+{"question": "How is win rate defined?", "expected": [{"source": "business_rules.md", "contains": "Won deals divided by closed deals"}]}
+{"question": "What does close_value mean?", "expected": [{"source": "data_dictionary.csv", "contains": "close_value"}]}
+{"question": "Which business driver depends on DRC-CONS-001?", "expected": [{"source": "bsd_definitions.md", "contains": "DRC-CONS-001"}]}
+{"question": "Is deal_stage mapped to a VERITI concept?", "expected": [{"source": "field_mappings.csv", "contains": "deal_stage"}]}
+{"question": "Which tables does sales_pipeline join to?", "expected": [{"source": "schema.yml", "contains": "FK account"}]}
