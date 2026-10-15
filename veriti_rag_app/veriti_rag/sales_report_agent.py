@@ -1,4 +1,5 @@
 """Bounded planning and narrative workflow for sales report generation."""
+from contextlib import nullcontext
 import json
 import re
 from typing import TypedDict
@@ -6,6 +7,7 @@ from typing import TypedDict
 from langgraph.graph import END, START, StateGraph
 
 from .sales_report import ANALYSIS_KEYS, build_sales_report_data
+from .tracing import thread_trace_project
 
 SALES_REPORT_BRIEF = """Create an evidence-led sales performance report.
 
@@ -243,9 +245,18 @@ def build_sales_report_agent(con, llm):
     return workflow.compile()
 
 
-def run_sales_report_agent(con, llm, user_prompt=""):
-    """Run the bounded report workflow and return data plus business narrative."""
-    result = build_sales_report_agent(con, llm).invoke({"user_prompt": user_prompt})
+def run_sales_report_agent(con, llm, user_prompt="", thread_id=None):
+    """Run the sales report workflow and return data plus business narrative."""
+
+    config = {"configurable": {"thread_id": thread_id}} if thread_id else None
+    agent = build_sales_report_agent(con, llm)
+    with thread_trace_project() if thread_id else nullcontext():
+        result = agent.invoke({"user_prompt": user_prompt}, config=config)
+    if thread_id:
+        from langchain_core.tracers.langchain import wait_for_all_tracers
+
+        wait_for_all_tracers()
+
     result["template_data"] = build_template_data(result)
     return result
 

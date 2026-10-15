@@ -2,7 +2,9 @@
 Required for real runs: OPENROUTER_API_KEY."""
 import os
 from dataclasses import dataclass
+from dotenv import load_dotenv
 
+load_dotenv()
 
 def _e(name: str, default: str) -> str:
     return os.getenv(name, default)
@@ -17,7 +19,7 @@ class Settings:
     client_id: str = _e("VERITI_CLIENT_ID", "maven_demo")
     # OpenRouter (OpenAI-compatible) for both chat and embeddings
     base_url: str = _e("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
-    llm_model: str = _e("VERITI_MODEL", "deepseek/deepseek-v4.1-flash")
+    llm_model: str = _e("VERITI_MODEL", "openai/gpt-oss-120b:nitro")
     embed_model: str = _e("VERITI_EMBED_MODEL", "openai/text-embedding-3-small")
     embeddings: str = _e("VERITI_EMBEDDINGS", "openrouter")  # or "hash" (offline, tests only)
     # chunking / retrieval
@@ -27,3 +29,20 @@ class Settings:
     # graph limits
     max_sql_attempts: int = 3
     max_answer_attempts: int = 2
+
+    # LangSmith tracing
+    langsmith_tracing: bool = (
+        _e("LANGSMITH_TRACING", "false").lower()
+        in ("true", "1", "yes", "on")
+    )
+    langsmith_endpoint: str = _e(
+        "LANGSMITH_ENDPOINT",
+        "https://api.smith.langchain.com",
+    )
+    langsmith_api_key: str = _e("LANGSMITH_API_KEY", "")
+    langsmith_project: str = _e(
+        "LANGSMITH_PROJECT",
+        "veriti-rag",
+    )
+
+

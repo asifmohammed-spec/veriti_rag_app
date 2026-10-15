@@ -43,6 +43,17 @@ Check slugs at https://openrouter.ai/models (filter output: embeddings).
 Changing the embedding model creates a new Chroma collection; re-run `ingest`.
 Never mix embeddings from different models in one index.
 
+## LangSmith tracing (optional)
+Install dependencies with `pip install -r requirements.txt`, then configure these environment variables before starting the CLI or Streamlit app:
+
+  LANGSMITH_TRACING=true
+  LANGSMITH_API_KEY=your-langsmith-api-key
+  LANGSMITH_PROJECT=veriti-rag
+  # Optional for non-US LangSmith regions, for example:
+  # LANGSMITH_ENDPOINT=https://eu.api.smith.langchain.com
+
+LangChain and LangGraph calls are traced automatically when tracing is enabled; no application code changes or callbacks are required. Traces can include prompts, model inputs and outputs, retrieved knowledge-base text, generated SQL, and report data. Review your data-handling requirements before enabling tracing for customer or sensitive data. Leave `LANGSMITH_TRACING` unset or set it to `false` to keep tracing disabled.
+
 ## Your data
 - CSVs in data/raw/ (table name = file name).
 - Reference files in knowledge_base/<client_id>/ ; set VERITI_CLIENT_ID.

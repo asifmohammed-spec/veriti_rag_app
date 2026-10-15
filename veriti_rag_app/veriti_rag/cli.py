@@ -3,11 +3,13 @@ import argparse
 import json
 import re
 from pathlib import Path
+from uuid import uuid4
 
 from .config import Settings
 from .models import make_embeddings, make_llm
 from .reports import create_dataset_report, create_sales_report
 from .sales_report_agent import run_sales_report_agent
+from .tracing import thread_trace_project
 from render_report import render_report_data
 from .store import get_vectorstore
 
@@ -108,6 +110,8 @@ def main(argv=None):
 
     a = sub.add_parser("ask")
     a.add_argument("question")
+    a.add_argument("--thread-id", default=None,
+                   help="Thread ID for checkpointing (defaults to a new ID per run)")
     a.add_argument("--show-context", action="store_true")
     a.add_argument("--chart", nargs="?", const="chart.png", default=None, metavar="PATH")
     a.add_argument("--report", nargs="?", const="question_report.pdf", default=None, metavar="PATH")
@@ -120,6 +124,8 @@ def main(argv=None):
     r.add_argument("--clean", nargs="?", const=True, default=False, type=parse_bool, metavar="yes|no",
                    help="Include only business insights, recommendations, and charts")
     sr = sub.add_parser("sales-report", help="Create an agentic sales performance PDF")
+    sr.add_argument("--thread-id", default=None,
+                    help="Thread ID for checkpointing (defaults to a new ID per run)")
     sr.add_argument("--output-dir", default="report_output", metavar="DIR",
                     help="Directory for versioned report artifacts (default: report_output)")
     sr.add_argument("--output", default=None, metavar="PATH",
@@ -157,7 +163,10 @@ def main(argv=None):
     elif args.cmd == "sales-report":
         from .db import load_csvs
         paths = _versioned_report_paths(args)
-        result = run_sales_report_agent(load_csvs(s.data_dir), make_llm(s), args.prompt)
+        thread_id = args.thread_id or str(uuid4())
+        result = run_sales_report_agent(
+            load_csvs(s.data_dir), make_llm(s), args.prompt, thread_id=thread_id
+        )
         output = create_sales_report(result, paths["pdf"])
         paths["data"].write_text(
             json.dumps(result["template_data"], indent=2, ensure_ascii=False, allow_nan=False) + "\n",
@@ -178,7 +187,15 @@ def main(argv=None):
 
         vs = get_vectorstore(s, make_embeddings(s))
         app = build_graph(load_csvs(s.data_dir), vs, make_llm(s), s)
-        out = app.invoke({"question": args.question, "client_id": s.client_id})
+        thread_id = args.thread_id or str(uuid4())
+        with thread_trace_project():
+            out = app.invoke(
+                {"question": args.question, "client_id": s.client_id},
+                config={"configurable": {"thread_id": thread_id}},
+            )
+        from langchain_core.tracers.langchain import wait_for_all_tracers
+
+        wait_for_all_tracers()
 
         if args.show_context:
             for h in out["context"]:

@@ -1,5 +1,7 @@
 # python -m streamlit run streamlit_app.py
 
+from uuid import uuid4
+
 import streamlit as st
 
 from veriti_rag.config import Settings
@@ -8,9 +10,11 @@ from veriti_rag.graph import build_graph
 from veriti_rag.ingest import ingest_all
 from veriti_rag.models import make_embeddings, make_llm
 from veriti_rag.store import get_vectorstore, search
+from veriti_rag.tracing import thread_trace_project
 
 
 def setup_state():
+    st.session_state.setdefault("thread_id", str(uuid4()))
     if "settings" not in st.session_state:
         st.session_state.settings = Settings(
             client_id="maven_demo",
@@ -79,7 +83,11 @@ if st.button("Run query"):
         app = build_graph(load_csvs(s.data_dir), vs, llm, s)
 
         with st.spinner("Running full RAG graph..."):
-            result = app.invoke({"question": question, "client_id": s.client_id})
+            with thread_trace_project():
+                result = app.invoke(
+                    {"question": question, "client_id": s.client_id},
+                    config={"configurable": {"thread_id": st.session_state.thread_id}},
+                )
 
         st.subheader("Answer")
         st.write(result.get("answer", ""))
