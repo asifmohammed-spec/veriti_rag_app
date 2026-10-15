@@ -1,0 +1,827 @@
+{
+  "metrics": {
+    "total_sales": 10005534.0,
+    "average_sales": 2360.9093912222747,
+    "average_weeks_to_close": 7.397424661228368,
+    "new_opportunities": 8800,
+    "open_opportunities": 2089,
+    "potential_to_close": 3360822.0,
+    "unpriced_open_opportunities": 333,
+    "won_deals": 4238,
+    "closed_deals": 6711,
+    "win_rate_pct": 63.15005215318134
+  },
+  "team_performance": {
+    "by_manager": [
+      {
+        "group_name": "Melvin Marxen",
+        "opportunities": 1929,
+        "won_deals": 882,
+        "closed_deals": 1418,
+        "won_revenue": 2251930.0,
+        "win_rate_pct": 62.20028208744711,
+        "vs_overall_win_rate_pp": -0.949770065734235
+      },
+      {
+        "group_name": "Summer Sewald",
+        "opportunities": 1701,
+        "won_deals": 828,
+        "closed_deals": 1287,
+        "won_revenue": 1964750.0,
+        "win_rate_pct": 64.33566433566433,
+        "vs_overall_win_rate_pp": 1.1856121824829913
+      },
+      {
+        "group_name": "Rocco Neubert",
+        "opportunities": 1327,
+        "won_deals": 691,
+        "closed_deals": 1113,
+        "won_revenue": 1960545.0,
+        "win_rate_pct": 62.084456424079065,
+        "vs_overall_win_rate_pp": -1.0655957291022773
+      },
+      {
+        "group_name": "Celia Rouche",
+        "opportunities": 1296,
+        "won_deals": 610,
+        "closed_deals": 962,
+        "won_revenue": 1603897.0,
+        "win_rate_pct": 63.40956340956341,
+        "vs_overall_win_rate_pp": 0.2595112563820692
+      },
+      {
+        "group_name": "Cara Losch",
+        "opportunities": 964,
+        "won_deals": 480,
+        "closed_deals": 745,
+        "won_revenue": 1130049.0,
+        "win_rate_pct": 64.42953020134229,
+        "vs_overall_win_rate_pp": 1.2794780481609465
+      },
+      {
+        "group_name": "Dustin Brinkmann",
+        "opportunities": 1583,
+        "won_deals": 747,
+        "closed_deals": 1186,
+        "won_revenue": 1094363.0,
+        "win_rate_pct": 62.98482293423272,
+        "vs_overall_win_rate_pp": -0.16522921894862463
+      }
+    ],
+    "by_region": [
+      {
+        "group_name": "West",
+        "opportunities": 2997,
+        "won_deals": 1438,
+        "closed_deals": 2249,
+        "won_revenue": 3568647.0,
+        "win_rate_pct": 63.93952867941307,
+        "vs_overall_win_rate_pp": 0.7894765262317307
+      },
+      {
+        "group_name": "Central",
+        "opportunities": 3512,
+        "won_deals": 1629,
+        "closed_deals": 2604,
+        "won_revenue": 3346293.0,
+        "win_rate_pct": 62.55760368663594,
+        "vs_overall_win_rate_pp": -0.5924484665453988
+      },
+      {
+        "group_name": "East",
+        "opportunities": 2291,
+        "won_deals": 1171,
+        "closed_deals": 1858,
+        "won_revenue": 3090594.0,
+        "win_rate_pct": 63.02475780409042,
+        "vs_overall_win_rate_pp": -0.12529434909092174
+      }
+    ]
+  },
+  "agent_performance": [
+    {
+      "sales_agent": "Darcel Schlecht",
+      "manager": "Melvin Marxen",
+      "opportunities": 747,
+      "won_deals": 349,
+      "closed_deals": 553,
+      "won_revenue": 1153214.0,
+      "win_rate_pct": 63.11030741410488,
+      "performance": "below overall win rate"
+    },
+    {
+      "sales_agent": "Vicki Laflamme",
+      "manager": "Celia Rouche",
+      "opportunities": 451,
+      "won_deals": 221,
+      "closed_deals": 347,
+      "won_revenue": 478396.0,
+      "win_rate_pct": 63.68876080691643,
+      "performance": "at or above overall win rate"
+    },
+    {
+      "sales_agent": "Kary Hendrixson",
+      "manager": "Summer Sewald",
+      "opportunities": 438,
+      "won_deals": 209,
+      "closed_deals": 335,
+      "won_revenue": 454298.0,
+      "win_rate_pct": 62.38805970149254,
+      "performance": "below overall win rate"
+    },
+    {
+      "sales_agent": "Cassey Cress",
+      "manager": "Rocco Neubert",
+      "opportunities": 346,
+      "won_deals": 163,
+      "closed_deals": 261,
+      "won_revenue": 450489.0,
+      "win_rate_pct": 62.452107279693486,
+      "performance": "below overall win rate"
+    },
+    {
+      "sales_agent": "Donn Cantrell",
+      "manager": "Rocco Neubert",
+      "opportunities": 275,
+      "won_deals": 158,
+      "closed_deals": 275,
+      "won_revenue": 445860.0,
+      "win_rate_pct": 57.45454545454545,
+      "performance": "below overall win rate"
+    },
+    {
+      "sales_agent": "Reed Clapper",
+      "manager": "Rocco Neubert",
+      "opportunities": 237,
+      "won_deals": 155,
+      "closed_deals": 237,
+      "won_revenue": 438336.0,
+      "win_rate_pct": 65.40084388185655,
+      "performance": "at or above overall win rate"
+    },
+    {
+      "sales_agent": "Zane Levy",
+      "manager": "Summer Sewald",
+      "opportunities": 349,
+      "won_deals": 161,
+      "closed_deals": 261,
+      "won_revenue": 430068.0,
+      "win_rate_pct": 61.68582375478927,
+      "performance": "below overall win rate"
+    },
+    {
+      "sales_agent": "Corliss Cosme",
+      "manager": "Cara Losch",
+      "opportunities": 310,
+      "won_deals": 150,
+      "closed_deals": 229,
+      "won_revenue": 421036.0,
+      "win_rate_pct": 65.50218340611353,
+      "performance": "at or above overall win rate"
+    },
+    {
+      "sales_agent": "James Ascencio",
+      "manager": "Summer Sewald",
+      "opportunities": 267,
+      "won_deals": 135,
+      "closed_deals": 206,
+      "won_revenue": 413533.0,
+      "win_rate_pct": 65.53398058252426,
+      "performance": "at or above overall win rate"
+    },
+    {
+      "sales_agent": "Daniell Hammack",
+      "manager": "Rocco Neubert",
+      "opportunities": 259,
+      "won_deals": 114,
+      "closed_deals": 187,
+      "won_revenue": 364229.0,
+      "win_rate_pct": 60.962566844919785,
+      "performance": "below overall win rate"
+    },
+    {
+      "sales_agent": "Maureen Marcano",
+      "manager": "Summer Sewald",
+      "opportunities": 285,
+      "won_deals": 149,
+      "closed_deals": 213,
+      "won_revenue": 350395.0,
+      "win_rate_pct": 69.9530516431925,
+      "performance": "at or above overall win rate"
+    },
+    {
+      "sales_agent": "Gladys Colclough",
+      "manager": "Melvin Marxen",
+      "opportunities": 317,
+      "won_deals": 135,
+      "closed_deals": 232,
+      "won_revenue": 345674.0,
+      "win_rate_pct": 58.189655172413794,
+      "performance": "below overall win rate"
+    },
+    {
+      "sales_agent": "Markita Hansen",
+      "manager": "Celia Rouche",
+      "opportunities": 306,
+      "won_deals": 130,
+      "closed_deals": 227,
+      "won_revenue": 328792.0,
+      "win_rate_pct": 57.268722466960355,
+      "performance": "below overall win rate"
+    },
+    {
+      "sales_agent": "Kami Bicknell",
+      "manager": "Summer Sewald",
+      "opportunities": 362,
+      "won_deals": 174,
+      "closed_deals": 272,
+      "won_revenue": 316456.0,
+      "win_rate_pct": 63.970588235294116,
+      "performance": "at or above overall win rate"
+    },
+    {
+      "sales_agent": "Marty Freudenburg",
+      "manager": "Melvin Marxen",
+      "opportunities": 281,
+      "won_deals": 122,
+      "closed_deals": 194,
+      "won_revenue": 291195.0,
+      "win_rate_pct": 62.88659793814433,
+      "performance": "below overall win rate"
+    },
+    {
+      "sales_agent": "Elease Gluck",
+      "manager": "Celia Rouche",
+      "opportunities": 177,
+      "won_deals": 80,
+      "closed_deals": 126,
+      "won_revenue": 289195.0,
+      "win_rate_pct": 63.492063492063494,
+      "performance": "at or above overall win rate"
+    },
+    {
+      "sales_agent": "Jonathan Berthelot",
+      "manager": "Melvin Marxen",
+      "opportunities": 345,
+      "won_deals": 171,
+      "closed_deals": 264,
+      "won_revenue": 284886.0,
+      "win_rate_pct": 64.77272727272727,
+      "performance": "at or above overall win rate"
+    },
+    {
+      "sales_agent": "Anna Snelling",
+      "manager": "Dustin Brinkmann",
+      "opportunities": 448,
+      "won_deals": 208,
+      "closed_deals": 336,
+      "won_revenue": 275056.0,
+      "win_rate_pct": 61.904761904761905,
+      "performance": "below overall win rate"
+    },
+    {
+      "sales_agent": "Hayden Neloms",
+      "manager": "Celia Rouche",
+      "opportunities": 202,
+      "won_deals": 107,
+      "closed_deals": 152,
+      "won_revenue": 272111.0,
+      "win_rate_pct": 70.39473684210526,
+      "performance": "at or above overall win rate"
+    },
+    {
+      "sales_agent": "Boris Faz",
+      "manager": "Rocco Neubert",
+      "opportunities": 210,
+      "won_deals": 101,
+      "closed_deals": 153,
+      "won_revenue": 261631.0,
+      "win_rate_pct": 66.01307189542484,
+      "performance": "at or above overall win rate"
+    },
+    {
+      "sales_agent": "Rosalina Dieter",
+      "manager": "Celia Rouche",
+      "opportunities": 160,
+      "won_deals": 72,
+      "closed_deals": 110,
+      "won_revenue": 235403.0,
+      "win_rate_pct": 65.45454545454545,
+      "performance": "at or above overall win rate"
+    },
+    {
+      "sales_agent": "Rosie Papadopoulos",
+      "manager": "Cara Losch",
+      "opportunities": 160,
+      "won_deals": 78,
+      "closed_deals": 121,
+      "won_revenue": 230169.0,
+      "win_rate_pct": 64.46280991735537,
+      "performance": "at or above overall win rate"
+    },
+    {
+      "sales_agent": "Cecily Lampkin",
+      "manager": "Dustin Brinkmann",
+      "opportunities": 203,
+      "won_deals": 107,
+      "closed_deals": 160,
+      "won_revenue": 229800.0,
+      "win_rate_pct": 66.875,
+      "performance": "at or above overall win rate"
+    },
+    {
+      "sales_agent": "Moses Frase",
+      "manager": "Dustin Brinkmann",
+      "opportunities": 260,
+      "won_deals": 129,
+      "closed_deals": 195,
+      "won_revenue": 207182.0,
+      "win_rate_pct": 66.15384615384616,
+      "performance": "at or above overall win rate"
+    },
+    {
+      "sales_agent": "Garret Kinder",
+      "manager": "Cara Losch",
+      "opportunities": 123,
+      "won_deals": 75,
+      "closed_deals": 123,
+      "won_revenue": 197773.0,
+      "win_rate_pct": 60.97560975609756,
+      "performance": "below overall win rate"
+    },
+    {
+      "sales_agent": "Lajuana Vencill",
+      "manager": "Dustin Brinkmann",
+      "opportunities": 311,
+      "won_deals": 127,
+      "closed_deals": 231,
+      "won_revenue": 194632.0,
+      "win_rate_pct": 54.97835497835498,
+      "performance": "below overall win rate"
+    },
+    {
+      "sales_agent": "Versie Hillebrand",
+      "manager": "Dustin Brinkmann",
+      "opportunities": 361,
+      "won_deals": 176,
+      "closed_deals": 264,
+      "won_revenue": 187693.0,
+      "win_rate_pct": 66.66666666666667,
+      "performance": "at or above overall win rate"
+    },
+    {
+      "sales_agent": "Niesha Huffines",
+      "manager": "Melvin Marxen",
+      "opportunities": 239,
+      "won_deals": 105,
+      "closed_deals": 175,
+      "won_revenue": 176961.0,
+      "win_rate_pct": 60.0,
+      "performance": "below overall win rate"
+    },
+    {
+      "sales_agent": "Wilburn Farren",
+      "manager": "Cara Losch",
+      "opportunities": 110,
+      "won_deals": 55,
+      "closed_deals": 79,
+      "won_revenue": 157640.0,
+      "win_rate_pct": 69.62025316455696,
+      "performance": "at or above overall win rate"
+    },
+    {
+      "sales_agent": "Violet Mclelland",
+      "manager": "Cara Losch",
+      "opportunities": 261,
+      "won_deals": 122,
+      "closed_deals": 193,
+      "won_revenue": 123431.0,
+      "win_rate_pct": 63.21243523316062,
+      "performance": "at or above overall win rate"
+    }
+  ],
+  "quarterly_trends": {
+    "sales_by_close_quarter": [
+      {
+        "quarter": "2017-Q1",
+        "won_deals": 531,
+        "closed_deals": 647,
+        "won_revenue": 1134672.0,
+        "win_rate_pct": 82.07109737248841,
+        "qoq_change_pct": null
+      },
+      {
+        "quarter": "2017-Q2",
+        "won_deals": 1254,
+        "closed_deals": 2032,
+        "won_revenue": 3086111.0,
+        "win_rate_pct": 61.71259842519685,
+        "qoq_change_pct": 171.98265225545356
+      },
+      {
+        "quarter": "2017-Q3",
+        "won_deals": 1257,
+        "closed_deals": 2047,
+        "won_revenue": 2982255.0,
+        "win_rate_pct": 61.40693698094773,
+        "qoq_change_pct": -3.3652710482545833
+      },
+      {
+        "quarter": "2017-Q4",
+        "won_deals": 1196,
+        "closed_deals": 1985,
+        "won_revenue": 2802496.0,
+        "win_rate_pct": 60.25188916876574,
+        "qoq_change_pct": -6.027620039198526
+      }
+    ],
+    "new_opportunities_by_engage_quarter": [
+      {
+        "quarter": "2016-Q4",
+        "new_opportunities": 358,
+        "qoq_change_pct": null
+      },
+      {
+        "quarter": "2017-Q1",
+        "new_opportunities": 1619,
+        "qoq_change_pct": 352.23463687150837
+      },
+      {
+        "quarter": "2017-Q2",
+        "new_opportunities": 2388,
+        "qoq_change_pct": 47.49845583693638
+      },
+      {
+        "quarter": "2017-Q3",
+        "new_opportunities": 2770,
+        "qoq_change_pct": 15.996649916247906
+      },
+      {
+        "quarter": "2017-Q4",
+        "new_opportunities": 1165,
+        "qoq_change_pct": -57.942238267148014
+      }
+    ]
+  },
+  "product_performance": [
+    {
+      "product": "GTXPro",
+      "opportunities": 1480,
+      "won_deals": 729,
+      "closed_deals": 1147,
+      "won_revenue": 3510578.0,
+      "win_rate_pct": 63.557105492589365
+    },
+    {
+      "product": "GTX Plus Pro",
+      "opportunities": 968,
+      "won_deals": 479,
+      "closed_deals": 745,
+      "won_revenue": 2629651.0,
+      "win_rate_pct": 64.29530201342281
+    },
+    {
+      "product": "MG Advanced",
+      "opportunities": 1412,
+      "won_deals": 654,
+      "closed_deals": 1084,
+      "won_revenue": 2216387.0,
+      "win_rate_pct": 60.33210332103321
+    },
+    {
+      "product": "GTX Plus Basic",
+      "opportunities": 1383,
+      "won_deals": 653,
+      "closed_deals": 1051,
+      "won_revenue": 705275.0,
+      "win_rate_pct": 62.131303520456704
+    },
+    {
+      "product": "GTX Basic",
+      "opportunities": 1866,
+      "won_deals": 915,
+      "closed_deals": 1436,
+      "won_revenue": 499263.0,
+      "win_rate_pct": 63.71866295264624
+    },
+    {
+      "product": "GTK 500",
+      "opportunities": 40,
+      "won_deals": 15,
+      "closed_deals": 25,
+      "won_revenue": 400612.0,
+      "win_rate_pct": 60.0
+    },
+    {
+      "product": "MG Special",
+      "opportunities": 1651,
+      "won_deals": 793,
+      "closed_deals": 1223,
+      "won_revenue": 43768.0,
+      "win_rate_pct": 64.84055600981193
+    }
+  ],
+  "sector_performance": [
+    {
+      "sector": "retail",
+      "opportunities": 1397,
+      "won_deals": 799,
+      "closed_deals": 1267,
+      "won_revenue": 1867528.0,
+      "win_rate_pct": 63.06235201262825
+    },
+    {
+      "sector": "technolgy",
+      "opportunities": 1165,
+      "won_deals": 671,
+      "closed_deals": 1058,
+      "won_revenue": 1515487.0,
+      "win_rate_pct": 63.42155009451796
+    },
+    {
+      "sector": "medical",
+      "opportunities": 1051,
+      "won_deals": 592,
+      "closed_deals": 950,
+      "won_revenue": 1359595.0,
+      "win_rate_pct": 62.31578947368421
+    },
+    {
+      "sector": "software",
+      "opportunities": 757,
+      "won_deals": 450,
+      "closed_deals": 704,
+      "won_revenue": 1077934.0,
+      "win_rate_pct": 63.92045454545455
+    },
+    {
+      "sector": "finance",
+      "opportunities": 678,
+      "won_deals": 375,
+      "closed_deals": 613,
+      "won_revenue": 950908.0,
+      "win_rate_pct": 61.174551386623165
+    },
+    {
+      "sector": "marketing",
+      "opportunities": 674,
+      "won_deals": 404,
+      "closed_deals": 623,
+      "won_revenue": 922321.0,
+      "win_rate_pct": 64.84751203852328
+    },
+    {
+      "sector": "entertainment",
+      "opportunities": 451,
+      "won_deals": 260,
+      "closed_deals": 402,
+      "won_revenue": 689007.0,
+      "win_rate_pct": 64.67661691542288
+    },
+    {
+      "sector": "telecommunications",
+      "opportunities": 501,
+      "won_deals": 285,
+      "closed_deals": 456,
+      "won_revenue": 653574.0,
+      "win_rate_pct": 62.5
+    },
+    {
+      "sector": "services",
+      "opportunities": 390,
+      "won_deals": 223,
+      "closed_deals": 352,
+      "won_revenue": 533006.0,
+      "win_rate_pct": 63.35227272727273
+    },
+    {
+      "sector": "employment",
+      "opportunities": 311,
+      "won_deals": 179,
+      "closed_deals": 286,
+      "won_revenue": 436174.0,
+      "win_rate_pct": 62.58741258741259
+    }
+  ],
+  "top_accounts": [
+    {
+      "account": "Kan-code",
+      "sector": "software",
+      "opportunities": 196,
+      "won_deals": 115,
+      "won_revenue": 341455.0
+    },
+    {
+      "account": "Konex",
+      "sector": "technolgy",
+      "opportunities": 178,
+      "won_deals": 108,
+      "won_revenue": 269245.0
+    },
+    {
+      "account": "Condax",
+      "sector": "medical",
+      "opportunities": 170,
+      "won_deals": 105,
+      "won_revenue": 206410.0
+    },
+    {
+      "account": "Cheers",
+      "sector": "entertainment",
+      "opportunities": 98,
+      "won_deals": 57,
+      "won_revenue": 198020.0
+    },
+    {
+      "account": "Hottechi",
+      "sector": "technolgy",
+      "opportunities": 200,
+      "won_deals": 111,
+      "won_revenue": 194957.0
+    }
+  ],
+  "data_quality": {
+    "invalid_engage_dates": 500,
+    "invalid_closed_dates": 0,
+    "won_missing_close_value": 0,
+    "reversed_dates": 0,
+    "unpriced_open_opportunities": 333
+  },
+  "charts": [
+    {
+      "title": "Won revenue by manager team",
+      "x_label": "Manager",
+      "y_label": "Won revenue",
+      "labels": [
+        "Melvin Marxen",
+        "Summer Sewald",
+        "Rocco Neubert",
+        "Celia Rouche",
+        "Cara Losch",
+        "Dustin Brinkmann"
+      ],
+      "values": [
+        2251930.0,
+        1964750.0,
+        1960545.0,
+        1603897.0,
+        1130049.0,
+        1094363.0
+      ]
+    },
+    {
+      "title": "Won revenue by sales agent",
+      "x_label": "Sales agent",
+      "y_label": "Won revenue",
+      "labels": [
+        "Darcel Schlecht",
+        "Vicki Laflamme",
+        "Kary Hendrixson",
+        "Cassey Cress",
+        "Donn Cantrell",
+        "Reed Clapper",
+        "Zane Levy",
+        "Corliss Cosme",
+        "James Ascencio",
+        "Daniell Hammack",
+        "Maureen Marcano",
+        "Gladys Colclough"
+      ],
+      "values": [
+        1153214.0,
+        478396.0,
+        454298.0,
+        450489.0,
+        445860.0,
+        438336.0,
+        430068.0,
+        421036.0,
+        413533.0,
+        364229.0,
+        350395.0,
+        345674.0
+      ]
+    },
+    {
+      "title": "Won revenue by product",
+      "x_label": "Product",
+      "y_label": "Won revenue",
+      "labels": [
+        "GTXPro",
+        "GTX Plus Pro",
+        "MG Advanced",
+        "GTX Plus Basic",
+        "GTX Basic",
+        "GTK 500",
+        "MG Special"
+      ],
+      "values": [
+        3510578.0,
+        2629651.0,
+        2216387.0,
+        705275.0,
+        499263.0,
+        400612.0,
+        43768.0
+      ]
+    },
+    {
+      "title": "Product win rate",
+      "x_label": "Product",
+      "y_label": "Win rate (%)",
+      "labels": [
+        "GTXPro",
+        "GTX Plus Pro",
+        "MG Advanced",
+        "GTX Plus Basic",
+        "GTX Basic",
+        "GTK 500",
+        "MG Special"
+      ],
+      "values": [
+        63.557105492589365,
+        64.29530201342281,
+        60.33210332103321,
+        62.131303520456704,
+        63.71866295264624,
+        60.0,
+        64.84055600981193
+      ]
+    },
+    {
+      "title": "Won revenue by sector",
+      "x_label": "Sector",
+      "y_label": "Won revenue",
+      "labels": [
+        "retail",
+        "technolgy",
+        "medical",
+        "software",
+        "finance",
+        "marketing",
+        "entertainment",
+        "telecommunications",
+        "services",
+        "employment"
+      ],
+      "values": [
+        1867528.0,
+        1515487.0,
+        1359595.0,
+        1077934.0,
+        950908.0,
+        922321.0,
+        689007.0,
+        653574.0,
+        533006.0,
+        436174.0
+      ]
+    },
+    {
+      "title": "Top accounts by won revenue",
+      "x_label": "Account",
+      "y_label": "Won revenue",
+      "labels": [
+        "Kan-code",
+        "Konex",
+        "Condax",
+        "Cheers",
+        "Hottechi"
+      ],
+      "values": [
+        341455.0,
+        269245.0,
+        206410.0,
+        198020.0,
+        194957.0
+      ]
+    },
+    {
+      "title": "Won revenue by close quarter",
+      "x_label": "Quarter",
+      "y_label": "Won revenue",
+      "labels": [
+        "2017-Q1",
+        "2017-Q2",
+        "2017-Q3",
+        "2017-Q4"
+      ],
+      "values": [
+        1134672.0,
+        3086111.0,
+        2982255.0,
+        2802496.0
+      ]
+    }
+  ],
+  "analysis_keys": [
+    "overview",
+    "teams",
+    "agents",
+    "quarters",
+    "products",
+    "sectors",
+    "accounts",
+    "data_quality"
+  ]
+}
