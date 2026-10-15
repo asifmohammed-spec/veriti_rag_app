@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def _e(name: str, default: str) -> str:
-    return os.getenv(name, default)
+    return os.environ.get(name, default)
 
 
 @dataclass(frozen=True)
