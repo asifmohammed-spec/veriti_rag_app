@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sales Performance Report</title>
+<style>
+:root{--bg:#f1f4f4;--surface:#fff;--ink:#14282a;--muted:#5a6e70;--line:#d8e1e1;--brand:#176b66;--brand2:#0e4a47;--bar:#176b66;--bar2:#e0a23b;--up:#1f8a55;--down:#c04a36;--soft:#e4f0ef;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0e1a1b;--surface:#162426;--ink:#e3eeee;--muted:#93a9aa;--line:#26393b;--brand:#5cc2ba;--brand2:#0b2f2d;--bar:#3fa8a0;--bar2:#e6b050;--up:#5fc791;--down:#ee8470;--soft:#1b3234}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0e1a1b;--surface:#162426;--ink:#e3eeee;--muted:#93a9aa;--line:#26393b;--brand:#5cc2ba;--brand2:#0b2f2d;--bar:#3fa8a0;--bar2:#e6b050;--up:#5fc791;--down:#ee8470;--soft:#1b3234}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15.5px/1.6 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:20px 16px 60px}
+.hero{background:linear-gradient(135deg,#0e4a47,#176b66);color:#fff;border-radius:10px;padding:30px 28px}
+.hero small{opacity:.8;font-size:13px}
+.hero h1{margin:6px 0 8px;font-size:clamp(28px,5vw,42px);line-height:1.1;font-weight:700;letter-spacing:-.5px}
+.hero p{margin:0;max-width:62ch;opacity:.9}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:20px}
+.kpi{background:rgba(255,255,255,.12);border-radius:8px;padding:12px 14px}
+.kpi b{display:block;font-size:24px;line-height:1.15}.kpi span{font-size:12.5px;opacity:.85}
+nav{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+nav a,button{font:inherit;font-size:13.5px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:5px 14px;text-decoration:none;cursor:pointer}
+nav a:hover,button:hover{border-color:var(--brand)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--bar2);outline-offset:2px}
+section{margin-top:34px}
+h2{font-size:22px;margin:0 0 12px;color:var(--brand);letter-spacing:-.2px}
+h3{font-size:16px;margin:0 0 6px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.note{color:var(--muted);font-size:13.5px}
+.callout{border-left:4px solid var(--bar2);background:var(--surface);padding:10px 16px;border-radius:0 8px 8px 0;margin-top:12px;font-size:14px}
+.flags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.flag{background:var(--soft);border-radius:6px;padding:4px 10px;font-size:13px}
+ol.rec{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+ol.rec li{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:6px;padding:10px 14px;font-size:14.5px}
+ol.rec li.hi{border-left-color:var(--down)}
+.finding p{margin:6px 0 0;font-size:14.5px}
+.bars{display:grid;gap:6px}
+.row{display:grid;grid-template-columns:minmax(90px,150px) 1fr auto;gap:10px;align-items:center;font-size:13.5px}
+.row .t{background:var(--soft);border-radius:4px;height:16px;overflow:hidden}
+.row .t i{display:block;height:100%;background:var(--bar);border-radius:4px}
+.row.alt .t i{background:var(--bar2)}
+.row .v{font-variant-numeric:tabular-nums;min-width:62px;text-align:right}
+.row .l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+th{text-align:right;padding:8px 10px;border-bottom:2px solid var(--line);color:var(--muted);font-weight:600;font-size:13px;white-space:nowrap}
+td{text-align:right;padding:8px 10px;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child,th.l,td.l{text-align:left}
+th.s{cursor:pointer}th.s:hover{color:var(--brand)}
+.pos{color:var(--up);font-weight:600}.neg{color:var(--down);font-weight:600}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:99px}
+.tag.p{background:var(--soft);color:var(--up)}.tag.n{background:var(--soft);color:var(--down)}
+.tools{display:flex;gap:8px;margin:10px 0}
+footer{margin-top:40px;text-align:center;color:var(--muted);font-size:13px}
+@media print{
+ @page{margin:12mm}
+ :root{--bg:#fff}body{background:#fff;font-size:12px}
+ .tools,nav,.noprint{display:none!important}
+ .hero,.row .t i,.kpi{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ section{break-inside:avoid-page}.card,tr,li{break-inside:avoid}
+ .wrap{padding:0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+ <small id="brand"></small>
+ <h1>Sales performance report</h1>
+ <p id="lede"></p>
+ <div class="kpis" id="kpis"></div>
+</header>
+
+<div class="tools noprint"><button id="pdf">Download as PDF</button><button id="theme">Toggle dark mode</button></div>
+<div class="callout" id="review" hidden></div>
+<nav id="nav"></nav>
+
+<section id="summary"><h2>Executive summary</h2><div class="card" id="sumText"></div><div class="callout" id="callout"></div><div class="flags" id="flags"></div></section>
+
+<section id="findings"><h2>Key findings</h2><div class="grid" id="findGrid"></div></section>
+
+<section id="recs"><h2>Recommendations</h2><ol class="rec" id="recList"></ol></section>
+
+<section id="teams"><h2>Teams and regions</h2>
+ <div class="grid"><div class="card"><h3>Won revenue by manager team</h3><div class="bars" id="chMgr"></div></div>
+ <div class="card"><h3>Won revenue by region</h3><div class="bars" id="chReg"></div></div></div>
+ <div class="card scroll" style="margin-top:14px"><table id="tMgr"></table></div>
+ <div class="card scroll" style="margin-top:14px"><table id="tReg"></table></div>
+</section>
+
+<section id="agents"><h2>Agent performance</h2>
+ <p class="note">Click a column header to sort. Comparisons use the overall win rate of <span id="ow"></span>; samples under five closed deals are marked insufficient.</p>
+ <div class="card scroll"><table id="tAgent"></table></div>
+</section>
+
+<section id="trends"><h2>Quarterly trends</h2>
+ <div class="grid"><div class="card"><h3>Won revenue by close quarter</h3><div class="bars" id="chQ"></div></div>
+ <div class="card"><h3>New opportunities by engage quarter</h3><div class="bars" id="chN"></div></div></div>
+ <div class="card scroll" style="margin-top:14px"><table id="tQ"></table></div>
+ <div class="card scroll" style="margin-top:14px"><table id="tN"></table></div>
+</section>
+
+<section id="products"><h2>Products</h2>
+ <div class="grid"><div class="card"><h3>Won revenue by product</h3><div class="bars" id="chP"></div></div>
+ <div class="card"><h3>Win rate by product</h3><div class="bars" id="chPW"></div></div></div>
+ <div class="card scroll" style="margin-top:14px"><table id="tP"></table></div>
+</section>
+
+<section id="sectors"><h2>Sectors and accounts</h2>
+ <div class="grid"><div class="card"><h3>Won revenue by sector</h3><div class="bars" id="chS"></div></div>
+ <div class="card"><h3>Top accounts by won revenue</h3><div class="bars" id="chA"></div></div></div>
+ <div class="card scroll" style="margin-top:14px"><table id="tS"></table></div>
+ <div class="card scroll" style="margin-top:14px"><table id="tA"></table></div>
+</section>
+
+<section id="notes"><h2>Data notes</h2><div class="card" id="notesBox"></div></section>
+<footer id="foot"></footer>
+</div>
+
+<script id="report-data" type="application/json">{{ data | tojson | safe }}</script>
+<script>
+/* ===== DATA INJECTION: Jinja fills the <script id="report-data"> tag above; nothing is hardcoded here ===== */
+const RAW=(()=>{if(window.__REPORT_DATA__)return window.__REPORT_DATA__;
+ const el=document.getElementById("report-data");try{return JSON.parse(el.textContent)}catch(e){return null}})();
+if(!RAW){document.body.innerHTML='<p style="padding:40px;font:16px system-ui">No report data found. Render this template with a data.json (see README).</p>';throw new Error("report data missing")}
+const KEYS={managers:["name","opportunities","won_deals","won_revenue","win_rate","vs_overall"],regions:["name","opportunities","won_revenue","win_rate"],agents:["name","manager","closed_deals","won_revenue","win_rate","performance"],quarters:["quarter","won_deals","closed_deals","won_revenue","win_rate","qoq_revenue"],newOpps:["quarter","new_opportunities","qoq_change"],products:["name","opportunities","closed_deals","won_revenue","win_rate"],sectors:["name","opportunities","won_deals","won_revenue","win_rate"],accounts:["name","sector","opportunities","won_deals","won_revenue"]};
+const rows=(a,k)=>(a||[]).map(r=>Array.isArray(r)?r:KEYS[k].map(x=>r[x]==null?null:r[x]));
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const clean=o=>typeof o==="string"?esc(o):Array.isArray(o)?o.map(clean):o&&typeof o==="object"?Object.fromEntries(Object.entries(o).map(([k,v])=>[k,clean(v)])):o;
+const R=clean(RAW),ov=R.overall||{};
+const D={brand:R.brand,
+ overall:{winRate:ov.win_rate,revenue:ov.revenue,wonDeals:ov.won_deals,closedDeals:ov.closed_deals,avgDeal:ov.avg_deal,weeks:ov.weeks_to_close,newOpps:ov.new_opps,openOpps:ov.open_opps,pipeline:ov.pipeline,unpriced:ov.unpriced},
+ summary:R.summary,callout:R.callout,flags:R.data_flags||[],
+ findings:(R.findings||[]).map(f=>Array.isArray(f)?f:[f.question,f.answer]),
+ recs:(R.recommendations||[]).map(f=>Array.isArray(f)?f:[f.urgent?1:0,f.text]),
+ managers:rows(R.managers,"managers"),regions:rows(R.regions,"regions"),agents:rows(R.agents,"agents"),quarters:rows(R.quarters,"quarters"),newOpps:rows(R.new_opps_by_quarter,"newOpps"),products:rows(R.products,"products"),sectors:rows(R.sectors,"sectors"),accounts:rows(R.accounts,"accounts"),
+ notes:R.notes||[],review:R.needs_review||[]};
+const NP="Not provided";
+/* ================================================================= */
+const $=id=>document.getElementById(id),O=D.overall;
+const n=v=>v==null?NP:Math.round(v).toLocaleString("en-US"),m=v=>v==null?NP:"$"+n(v),pc=v=>v==null?NP:Number(v).toFixed(1)+"%",f2=(v,d)=>v==null?NP:Number(v).toFixed(d);
+const q=v=>v==null?"N/A":`<span class="${v>=0?"pos":"neg"}">${v>0?"+":""}${Number(v).toFixed(1)}%</span>`;
+function table(id,head,rows){$(id).innerHTML=`<thead><tr>${head.map((h,i)=>`<th class="${i==0?"l":""}">${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody>`}
+function bars(id,items,fmt,alt){items=items.filter(i=>i[1]!=null);const mx=Math.max(1,...items.map(i=>i[1]));$(id).innerHTML=items.map(([l,v])=>`<div class="row ${alt?"alt":""}"><span class="l" title="${l}">${l}</span><span class="t"><i style="width:${v/mx*100}%"></i></span><span class="v">${fmt(v)}</span></div>`).join("")}
+const short=v=>v>=1e6?(v/1e6).toFixed(2)+"M":v>=1e3?Math.round(v/1e3)+"K":v;
+
+$("brand").innerHTML=D.brand||"";
+$("lede").textContent=`${m(O.revenue)} recorded won revenue from ${n(O.wonDeals)} won deals at a ${f2(O.winRate,2)}% overall win rate.`;
+$("kpis").innerHTML=[[m(O.revenue),"Total sales"],[O.avgDeal==null?NP:"$"+Number(O.avgDeal).toLocaleString("en-US",{minimumFractionDigits:2}),"Avg per won deal"],[f2(O.weeks,2),"Avg weeks to close"],[n(O.newOpps),"New opportunities"],[n(O.openOpps),"Open opportunities"],[m(O.pipeline),"Potential to close"],[O.winRate==null?NP:Number(O.winRate).toFixed(2)+"%","Overall win rate"]].map(([b,l])=>`<div class="kpi"><b>${b}</b><span>${l}</span></div>`).join("");
+if(D.review.length){$("review").hidden=false;$("review").innerHTML="<b>Needs review:</b> "+D.review.join(", ")}
+$("nav").innerHTML=[["summary","Summary"],["findings","Findings"],["recs","Recommendations"],["teams","Teams"],["agents","Agents"],["trends","Trends"],["products","Products"],["sectors","Sectors"],["notes","Notes"]].map(([i,t])=>`<a href="#${i}">${t}</a>`).join("");
+$("sumText").innerHTML=D.summary||NP;$("callout").innerHTML=D.callout||NP;
+$("flags").innerHTML=D.flags.map(f=>`<span class="flag">${f}</span>`).join("");
+$("findGrid").innerHTML=D.findings.map(([h,p])=>`<div class="card finding"><h3>${h}</h3><p>${p}</p></div>`).join("");
+$("recList").innerHTML=D.recs.map(([hi,t])=>`<li class="${hi?"hi":""}">${t}</li>`).join("");
+
+bars("chMgr",D.managers.map(r=>[r[0],r[3]]),short);
+bars("chReg",D.regions.map(r=>[r[0],r[2]]),short);
+table("tMgr",["Manager team","Opportunities","Won deals","Won revenue","Win rate","Vs overall (pp)"],D.managers.map(r=>[r[0],n(r[1]),n(r[2]),m(r[3]),pc(r[4]),q(r[5]).replace("%","")]));
+table("tReg",["Region","Opportunities","Won revenue","Win rate"],D.regions.map(r=>[r[0],n(r[1]),m(r[2]),pc(r[3])]));
+
+$("ow").textContent=f2(O.winRate,2)+"%";
+let sortKey=3,asc=false;
+function agents(){const H=["Agent","Manager","Closed deals","Won revenue","Win rate","Comparison"],rows=D.agents.slice().sort((a,b)=>{const x=a[sortKey],y=b[sortKey];return (typeof x=="string"?x.localeCompare(y):x-y)*(asc?1:-1)});
+ $("tAgent").innerHTML=`<thead><tr>${H.map((h,i)=>`<th class="s ${i<2?"l":""}" data-k="${i}">${h}${i==sortKey?(asc?" ▲":" ▼"):""}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td class="l">${r[1]}</td><td>${n(r[2])}</td><td>${m(r[3])}</td><td>${pc(r[4])}</td><td>${r[5]==="insufficient sample"?'<span class="tag">insufficient sample</span>':r[4]==null?'<span class="tag">n/a</span>':r[4]>=O.winRate?'<span class="tag p">at or above</span>':'<span class="tag n">below</span>'}</td></tr>`).join("")}</tbody>`}
+$("tAgent").addEventListener("click",e=>{const k=e.target.dataset.k;if(k==null)return;const i=+k;if(i==5)return;asc=(sortKey==i)?!asc:(i<2);sortKey=i;agents()});
+agents();
+
+bars("chQ",D.quarters.map(r=>[r[0],r[3]]),short);
+bars("chN",D.newOpps.map(r=>[r[0],r[1]]),n,true);
+table("tQ",["Close quarter","Won deals","Closed deals","Won revenue","Win rate","QoQ revenue"],D.quarters.map(r=>[r[0],n(r[1]),n(r[2]),m(r[3]),pc(r[4]),q(r[5])]));
+table("tN",["Engage quarter","New opportunities","QoQ change"],D.newOpps.map(r=>[r[0],n(r[1]),q(r[2])]));
+
+bars("chP",D.products.map(r=>[r[0],r[3]]),short);
+bars("chPW",D.products.map(r=>[r[0],r[4]]),v=>v.toFixed(1)+"%",true);
+table("tP",["Product","Opportunities","Closed deals","Won revenue","Win rate"],D.products.map(r=>[r[0],n(r[1]),n(r[2]),m(r[3]),pc(r[4])]));
+bars("chS",D.sectors.map(r=>[r[0],r[3]]),short);
+bars("chA",D.accounts.map(r=>[r[0],r[4]]),short,true);
+table("tS",["Sector","Opportunities","Won deals","Won revenue","Win rate"],D.sectors.map(r=>[r[0],n(r[1]),n(r[2]),m(r[3]),pc(r[4])]));
+table("tA",["Account","Sector","Opportunities","Won deals","Won revenue"],D.accounts.map(r=>[r[0],`<span style="text-align:left">${r[1]}</span>`,n(r[2]),n(r[3]),m(r[4])]));
+
+$("notesBox").innerHTML="<ul style='margin:0;padding-left:18px'>"+D.notes.map(t=>`<li>${t}</li>`).join("")+"</ul>";
+$("foot").innerHTML=(D.brand||"")+" · Sales performance report";
+$("pdf").onclick=()=>window.print();
+$("theme").onclick=()=>{const d=document.documentElement;d.dataset.theme=getComputedStyle(d).colorScheme.includes("dark")?"light":"dark"};
+</script>
+</body>
+</html>

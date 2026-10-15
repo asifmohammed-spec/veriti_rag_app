@@ -245,4 +245,157 @@ def build_sales_report_agent(con, llm):
 
 def run_sales_report_agent(con, llm, user_prompt=""):
     """Run the bounded report workflow and return data plus business narrative."""
-    return build_sales_report_agent(con, llm).invoke({"user_prompt": user_prompt})
+    result = build_sales_report_agent(con, llm).invoke({"user_prompt": user_prompt})
+    result["template_data"] = build_template_data(result)
+    return result
+
+
+def build_template_data(result):
+    """Adapt computed metrics and narrative to the HTML template's JSON contract."""
+    data = result["report_data"]
+    narrative = result.get("narrative") or _fallback_narrative(data)
+    metrics = data["metrics"]
+    findings = narrative.get("key_findings") or {}
+    insights = narrative.get("business_insights") or {}
+    quality = data["data_quality"]
+
+    notes = [
+        "Total sales and average sales use recorded close values for won deals.",
+        "Win rates use closed won/lost deals; open opportunities are excluded.",
+        "Quarterly sales use close date; new opportunities use engage date.",
+        "Potential to close is an exact product-list-price estimate, not booked revenue or a probability-weighted forecast.",
+        "Agent comparisons with fewer than five closed deals are marked as an insufficient sample.",
+    ]
+    flags = []
+    if quality["unpriced_open_opportunities"]:
+        flags.append(
+            f"{quality['unpriced_open_opportunities']:,} open opportunities have no exact product list-price match."
+        )
+    if quality["won_missing_close_value"]:
+        flags.append(f"{quality['won_missing_close_value']:,} won deals have no recorded close value.")
+    if quality["reversed_dates"]:
+        flags.append(f"{quality['reversed_dates']:,} closed deals have reversed engage/close dates.")
+    if quality["invalid_engage_dates"]:
+        flags.append(f"{quality['invalid_engage_dates']:,} opportunities have invalid or missing engage dates.")
+
+    recommendations = narrative.get("recommendations") or []
+    recommendation_rows = []
+    for recommendation in recommendations:
+        if isinstance(recommendation, dict):
+            recommendation_rows.append({
+                "urgent": bool(recommendation.get("urgent", False)),
+                "text": str(recommendation.get("text", "")),
+            })
+        else:
+            recommendation_rows.append({"urgent": False, "text": str(recommendation)})
+
+    return {
+        "brand": "VERITI | Sales performance",
+        "overall": {
+            "win_rate": metrics["win_rate_pct"],
+            "revenue": metrics["total_sales"],
+            "won_deals": metrics["won_deals"],
+            "closed_deals": metrics["closed_deals"],
+            "avg_deal": metrics["average_sales"],
+            "weeks_to_close": metrics["average_weeks_to_close"],
+            "new_opps": metrics["new_opportunities"],
+            "open_opps": metrics["open_opportunities"],
+            "pipeline": metrics["potential_to_close"],
+            "unpriced": metrics["unpriced_open_opportunities"],
+        },
+        "summary": str(narrative.get("executive_summary", "")),
+        "callout": str(insights.get("opportunities", "")),
+        "data_flags": flags,
+        "findings": [
+            {"question": question, "answer": str(findings.get(key, "See the detailed results below."))}
+            for question, key in [
+                ("How is each sales team performing compared to the rest?", "team_performance"),
+                ("Are any sales agents lagging behind?", "agent_performance"),
+                ("Are there any quarter-over-quarter trends?", "quarter_trends"),
+                ("Do any products have better win rates?", "product_win_rates"),
+            ]
+        ],
+        "recommendations": recommendation_rows,
+        "managers": [
+            {
+                "name": row["group_name"],
+                "opportunities": row["opportunities"],
+                "won_deals": row["won_deals"],
+                "won_revenue": row["won_revenue"],
+                "win_rate": row["win_rate_pct"],
+                "vs_overall": row["vs_overall_win_rate_pp"],
+            }
+            for row in data["team_performance"]["by_manager"]
+        ],
+        "regions": [
+            {
+                "name": row["group_name"],
+                "opportunities": row["opportunities"],
+                "won_revenue": row["won_revenue"],
+                "win_rate": row["win_rate_pct"],
+            }
+            for row in data["team_performance"]["by_region"]
+        ],
+        "agents": [
+            {
+                "name": row["sales_agent"],
+                "manager": row["manager"],
+                "closed_deals": row["closed_deals"],
+                "won_revenue": row["won_revenue"],
+                "win_rate": row["win_rate_pct"],
+                "performance": row["performance"],
+            }
+            for row in data["agent_performance"]
+        ],
+        "quarters": [
+            {
+                "quarter": row["quarter"],
+                "won_deals": row["won_deals"],
+                "closed_deals": row["closed_deals"],
+                "won_revenue": row["won_revenue"],
+                "win_rate": row["win_rate_pct"],
+                "qoq_revenue": row["qoq_change_pct"],
+            }
+            for row in data["quarterly_trends"]["sales_by_close_quarter"]
+        ],
+        "new_opps_by_quarter": [
+            {
+                "quarter": row["quarter"],
+                "new_opportunities": row["new_opportunities"],
+                "qoq_change": row["qoq_change_pct"],
+            }
+            for row in data["quarterly_trends"]["new_opportunities_by_engage_quarter"]
+        ],
+        "products": [
+            {
+                "name": row["product"],
+                "opportunities": row["opportunities"],
+                "closed_deals": row["closed_deals"],
+                "won_revenue": row["won_revenue"],
+                "win_rate": row["win_rate_pct"],
+            }
+            for row in data["product_performance"]
+        ],
+        "sectors": [
+            {
+                "name": row["sector"],
+                "opportunities": row["opportunities"],
+                "won_deals": row["won_deals"],
+                "won_revenue": row["won_revenue"],
+                "win_rate": row["win_rate_pct"],
+            }
+            for row in data["sector_performance"]
+        ],
+        "accounts": [
+            {
+                "name": row["account"],
+                "sector": row["sector"],
+                "opportunities": row["opportunities"],
+                "won_deals": row["won_deals"],
+                "won_revenue": row["won_revenue"],
+            }
+            for row in data["top_accounts"]
+        ],
+        "notes": notes,
+        "needs_review": [],
+    }

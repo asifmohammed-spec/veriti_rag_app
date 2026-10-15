@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 from veriti_rag import cli, reports
 from veriti_rag.config import Settings
@@ -10,8 +11,10 @@ from veriti_rag.sales_report_agent import (
     PLAN_SYSTEM,
     REVIEW_SYSTEM,
     _fallback_narrative,
+    build_template_data,
     run_sales_report_agent,
 )
+from render_report import render_report
 
 
 def test_sales_report_data_includes_requested_sections():
@@ -32,6 +35,34 @@ def test_sales_report_data_includes_requested_sections():
     assert data["sector_performance"]
     assert len(data["top_accounts"]) == 5
     assert all(chart["labels"] and len(chart["labels"]) == len(chart["values"]) for chart in data["charts"])
+
+
+def test_template_output_renders_and_round_trips_data(tmp_path):
+    report_data = build_sales_report_data(load_csvs("data/raw"))
+    result = {
+        "report_data": report_data,
+        "narrative": _fallback_narrative(report_data),
+    }
+    payload = build_template_data(result)
+    data_path = tmp_path / "sales_report_data.json"
+    data_path.write_text(json.dumps(payload), encoding="utf-8")
+    html_path, pdf_path = render_report(data_path, tmp_path / "rendered")
+
+    html = html_path.read_text(encoding="utf-8")
+    start = '<script id="report-data" type="application/json">'
+    embedded_json = html.split(start, 1)[1].split("</script>", 1)[0]
+    embedded_data = json.loads(embedded_json)
+
+    assert pdf_path is None
+    assert html_path.name == "report.html"
+    assert embedded_data == payload
+    assert {"brand", "overall", "summary", "findings", "managers", "regions", "agents",
+            "quarters", "new_opps_by_quarter", "products", "sectors", "accounts", "notes"} <= set(payload)
+    assert len(payload["accounts"]) == 5
+    assert "Sales performance report" in html
+    assert embedded_data["overall"]["revenue"] == report_data["metrics"]["total_sales"]
+    assert all("performance" in row for row in payload["agents"])
+    assert 'r[5]==="insufficient sample"' in html
 
 
 def test_sales_report_agent_filters_plan_and_repairs_coverage():
@@ -102,18 +133,55 @@ def test_sales_report_pdf_has_business_sections_without_technical_details(tmp_pa
     assert captured["images"] == len(data["charts"])
 
 
-def test_sales_report_cli_prints_only_success_path(monkeypatch, capsys, tmp_path):
+def test_sales_report_cli_writes_incremented_versioned_outputs(monkeypatch, capsys, tmp_path):
     observed = {}
-    expected_result = {"report_data": {}, "narrative": {}}
-    expected_output = tmp_path / "sales.pdf"
+    template_data = {"overall": {"revenue": 123.0}}
+    extracted_data = {"metrics": {"total_sales": 123.0}}
+    expected_result = {"report_data": extracted_data, "narrative": {}, "template_data": template_data}
+    output_dir = tmp_path / "report_output"
+
+    def write_pdf(result, output):
+        output = Path(output)
+        output.touch()
+        return output
+
+    def write_html(data, html):
+        html = Path(html)
+        html.touch()
+        observed.update(template_data=data, html=html)
+
     monkeypatch.setattr(cli, "Settings", lambda: Settings(data_dir="data/raw"))
     monkeypatch.setattr(cli, "make_llm", lambda settings: "fake-model")
     monkeypatch.setattr(cli, "make_embeddings", lambda settings: (_ for _ in ()).throw(AssertionError("embeddings must not be loaded")))
     monkeypatch.setattr(cli, "get_vectorstore", lambda *args: (_ for _ in ()).throw(AssertionError("vector store must not be loaded")))
     monkeypatch.setattr(cli, "run_sales_report_agent", lambda con, llm, prompt: observed.update(prompt=prompt, llm=llm) or expected_result)
-    monkeypatch.setattr(cli, "create_sales_report", lambda result, output: expected_output)
+    monkeypatch.setattr(cli, "create_sales_report", write_pdf)
+    monkeypatch.setattr(cli, "render_report_data", write_html)
 
-    cli.main(["sales-report", "--output", str(expected_output), "--prompt", "emphasize conversion"])
+    cli.main([
+        "sales-report", "--output-dir", str(output_dir), "--prompt", "emphasize conversion",
+    ])
 
-    assert observed == {"prompt": "emphasize conversion", "llm": "fake-model"}
-    assert capsys.readouterr().out.strip() == f"Sales report saved to {expected_output}"
+    expected_output = output_dir / "sales_report_v1.pdf"
+    expected_html = output_dir / "sales_report_v1.html"
+    expected_data = output_dir / "sales_report_data_v1.json"
+    expected_extracted = output_dir / "sales_report_extracted_v1.json"
+    assert observed == {
+        "prompt": "emphasize conversion", "llm": "fake-model",
+        "template_data": template_data, "html": expected_html,
+    }
+    assert json.loads(expected_data.read_text(encoding="utf-8")) == template_data
+    assert json.loads(expected_extracted.read_text(encoding="utf-8")) == extracted_data
+    assert capsys.readouterr().out.splitlines() == [
+        f"Sales report saved to {expected_output}",
+        f"HTML report saved to {expected_html}",
+        f"Template data saved to {expected_data}",
+        f"Extracted analysis saved to {expected_extracted}",
+    ]
+
+    cli.main(["sales-report", "--output-dir", str(output_dir)])
+
+    assert (output_dir / "sales_report_v2.pdf").exists()
+    assert (output_dir / "sales_report_v2.html").exists()
+    assert (output_dir / "sales_report_data_v2.json").exists()
+    assert (output_dir / "sales_report_extracted_v2.json").exists()

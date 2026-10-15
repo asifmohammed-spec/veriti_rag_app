@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sales Performance Report</title>
+<style>
+:root{--bg:#f1f4f4;--surface:#fff;--ink:#14282a;--muted:#5a6e70;--line:#d8e1e1;--brand:#176b66;--brand2:#0e4a47;--bar:#176b66;--bar2:#e0a23b;--up:#1f8a55;--down:#c04a36;--soft:#e4f0ef;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0e1a1b;--surface:#162426;--ink:#e3eeee;--muted:#93a9aa;--line:#26393b;--brand:#5cc2ba;--brand2:#0b2f2d;--bar:#3fa8a0;--bar2:#e6b050;--up:#5fc791;--down:#ee8470;--soft:#1b3234}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0e1a1b;--surface:#162426;--ink:#e3eeee;--muted:#93a9aa;--line:#26393b;--brand:#5cc2ba;--brand2:#0b2f2d;--bar:#3fa8a0;--bar2:#e6b050;--up:#5fc791;--down:#ee8470;--soft:#1b3234}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15.5px/1.6 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:20px 16px 60px}
+.hero{background:linear-gradient(135deg,#0e4a47,#176b66);color:#fff;border-radius:10px;padding:30px 28px}
+.hero small{opacity:.8;font-size:13px}
+.hero h1{margin:6px 0 8px;font-size:clamp(28px,5vw,42px);line-height:1.1;font-weight:700;letter-spacing:-.5px}
+.hero p{margin:0;max-width:62ch;opacity:.9}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:20px}
+.kpi{background:rgba(255,255,255,.12);border-radius:8px;padding:12px 14px}
+.kpi b{display:block;font-size:24px;line-height:1.15}.kpi span{font-size:12.5px;opacity:.85}
+nav{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+nav a,button{font:inherit;font-size:13.5px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:5px 14px;text-decoration:none;cursor:pointer}
+nav a:hover,button:hover{border-color:var(--brand)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--bar2);outline-offset:2px}
+section{margin-top:34px}
+h2{font-size:22px;margin:0 0 12px;color:var(--brand);letter-spacing:-.2px}
+h3{font-size:16px;margin:0 0 6px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.note{color:var(--muted);font-size:13.5px}
+.callout{border-left:4px solid var(--bar2);background:var(--surface);padding:10px 16px;border-radius:0 8px 8px 0;margin-top:12px;font-size:14px}
+.flags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.flag{background:var(--soft);border-radius:6px;padding:4px 10px;font-size:13px}
+ol.rec{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+ol.rec li{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:6px;padding:10px 14px;font-size:14.5px}
+ol.rec li.hi{border-left-color:var(--down)}
+.finding p{margin:6px 0 0;font-size:14.5px}
+.bars{display:grid;gap:6px}
+.row{display:grid;grid-template-columns:minmax(90px,150px) 1fr auto;gap:10px;align-items:center;font-size:13.5px}
+.row .t{background:var(--soft);border-radius:4px;height:16px;overflow:hidden}
+.row .t i{display:block;height:100%;background:var(--bar);border-radius:4px}
+.row.alt .t i{background:var(--bar2)}
+.row .v{font-variant-numeric:tabular-nums;min-width:62px;text-align:right}
+.row .l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+th{text-align:right;padding:8px 10px;border-bottom:2px solid var(--line);color:var(--muted);font-weight:600;font-size:13px;white-space:nowrap}
+td{text-align:right;padding:8px 10px;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child,th.l,td.l{text-align:left}
+th.s{cursor:pointer}th.s:hover{color:var(--brand)}
+.pos{color:var(--up);font-weight:600}.neg{color:var(--down);font-weight:600}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:99px}
+.tag.p{background:var(--soft);color:var(--up)}.tag.n{background:var(--soft);color:var(--down)}
+.tools{display:flex;gap:8px;margin:10px 0}
+footer{margin-top:40px;text-align:center;color:var(--muted);font-size:13px}
+@media print{
+ @page{margin:12mm}
+ :root{--bg:#fff}body{background:#fff;font-size:12px}
+ .tools,nav,.noprint{display:none!important}
+ .hero,.row .t i,.kpi{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ section{break-inside:avoid-page}.card,tr,li{break-inside:avoid}
+ .wrap{padding:0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+ <small id="brand"></small>
+ <h1>Sales performance report</h1>
+ <p id="lede"></p>
+ <div class="kpis" id="kpis"></div>
+</header>
+
+<div class="tools noprint"><button id="pdf">Download as PDF</button><button id="theme">Toggle dark mode</button></div>
+<nav id="nav"></nav>
+
+<section id="summary"><h2>Executive summary</h2><div class="card" id="sumText"></div><div class="callout" id="callout"></div><div class="flags" id="flags"></div></section>
+
+<section id="findings"><h2>Key findings</h2><div class="grid" id="findGrid"></div></section>
+
+<section id="recs"><h2>Recommendations</h2><ol class="rec" id="recList"></ol></section>
+
+<section id="teams"><h2>Teams and regions</h2>
+ <div class="grid"><div class="card"><h3>Won revenue by manager team</h3><div class="bars" id="chMgr"></div></div>
+ <div class="card"><h3>Won revenue by region</h3><div class="bars" id="chReg"></div></div></div>
+ <div class="card scroll" style="margin-top:14px"><table id="tMgr"></table></div>
+ <div class="card scroll" style="margin-top:14px"><table id="tReg"></table></div>
+</section>
+
+<section id="agents"><h2>Agent performance</h2>
+ <p class="note">Click a column header to sort. Comparison uses the overall win rate of <span id="ow"></span>.</p>
+ <div class="card scroll"><table id="tAgent"></table></div>
+</section>
+
+<section id="trends"><h2>Quarterly trends</h2>
+ <div class="grid"><div class="card"><h3>Won revenue by close quarter</h3><div class="bars" id="chQ"></div></div>
+ <div class="card"><h3>New opportunities by engage quarter</h3><div class="bars" id="chN"></div></div></div>
+ <div class="card scroll" style="margin-top:14px"><table id="tQ"></table></div>
+ <div class="card scroll" style="margin-top:14px"><table id="tN"></table></div>
+</section>
+
+<section id="products"><h2>Products</h2>
+ <div class="grid"><div class="card"><h3>Won revenue by product</h3><div class="bars" id="chP"></div></div>
+ <div class="card"><h3>Win rate by product</h3><div class="bars" id="chPW"></div></div></div>
+ <div class="card scroll" style="margin-top:14px"><table id="tP"></table></div>
+</section>
+
+<section id="sectors"><h2>Sectors and accounts</h2>
+ <div class="grid"><div class="card"><h3>Won revenue by sector</h3><div class="bars" id="chS"></div></div>
+ <div class="card"><h3>Top accounts by won revenue</h3><div class="bars" id="chA"></div></div></div>
+ <div class="card scroll" style="margin-top:14px"><table id="tS"></table></div>
+ <div class="card scroll" style="margin-top:14px"><table id="tA"></table></div>
+</section>
+
+<section id="notes"><h2>Data notes</h2><div class="card" id="notesBox"></div></section>
+<footer id="foot"></footer>
+</div>
+
+<script>
+/* ===== EDIT THIS OBJECT: the whole report re-renders from it ===== */
+const D={
+ brand:"VERITI | Data insights",
+ overall:{winRate:63.15,revenue:10005534,wonDeals:4238,closedDeals:6711,avgDeal:2360.91,weeks:7.40,newOpps:8800,openOpps:2089,pipeline:3360822,unpriced:333},
+ summary:"Recorded won revenue is 10,005,534 across 4,238 won deals, with an overall win rate of 63.15%. Team win rates are tightly grouped: Cara Losch (64.43%) and Summer Sewald (64.34%) are above the overall rate, while Rocco Neubert (62.08%) and Melvin Marxen (62.20%) are below. MG Special leads on conversion (64.84%) and GTXPro leads won revenue (3,510,578). Revenue peaked in 2017-Q2 at 3,086,111, and 2017-Q4 shows a lower win rate of 60.25% with new opportunities down 57.94% QoQ.",
+ callout:"Potential to close is estimated from exact product-catalog list-price matches for open opportunities. It is list price, not booked revenue and not a probability-weighted forecast, because no opportunity probability is available.",
+ flags:["500 invalid engage dates","0 invalid closed dates","0 won deals missing close value","0 reversed dates","333 unpriced open opportunities"],
+ findings:[
+  ["How is each sales team performing?","By manager, Cara Losch (+1.28 pp) and Summer Sewald (+1.19 pp) lead on win rate, while Melvin Marxen has the highest won revenue (2,251,930) but sits 0.95 pp below overall. West leads regions on revenue (3,568,647) and win rate (63.94%)."],
+  ["Are any agents lagging?","Lagging win rates include Lajuana Vencill (54.98%), Markita Hansen (57.27%), Donn Cantrell (57.45%) and Gladys Colclough (58.19%). Darcel Schlecht leads won revenue (1,153,214) but is just below the overall win rate. Hayden Neloms (70.39%) and Maureen Marcano (69.95%) lead on win rate."],
+  ["Any quarter-over-quarter trends?","Revenue rose from 1,134,672 in 2017-Q1 to 3,086,111 in 2017-Q2, then slipped to 2,802,496 by Q4. Win rate fell from 82.07% in Q1 (only 647 closed deals) to 60.25% in Q4. New opportunities dropped 57.94% in 2017-Q4."],
+  ["Do any products convert better?","MG Special (64.84%) and GTX Plus Pro (64.30%) have the best win rates. MG Advanced has 2,216,387 won revenue but a 60.33% win rate. GTK 500 has too small a sample (40 opportunities) to draw conclusions."]],
+ recs:[
+  [1,"Coach agents below the 63.15% overall win rate, especially Lajuana Vencill (54.98%), Markita Hansen (57.27%), Donn Cantrell (57.45%), Gladys Colclough (58.19%) and Niesha Huffines (60.00%)."],
+  [1,"Investigate the 2017-Q4 drop in new opportunities (-57.94% QoQ) and the fall in close-quarter win rate from 82.07% to 60.25%."],
+  [0,"Prioritize product conversion: MG Special (64.84%) and GTX Plus Pro (64.30%) convert best; GTXPro and GTX Plus Pro lead won revenue."],
+  [0,"Review MG Advanced: 2,216,387 won revenue but a 60.33% win rate, below overall."],
+  [0,"Target high-revenue sectors (retail, technology, medical) and high-win-rate sectors (marketing, entertainment, software)."],
+  [0,"Expand engagement with top accounts Kan-code, Konex, Condax, Cheers and Hottechi."],
+  [1,"Price the 333 unpriced open opportunities to improve pipeline visibility; the 3,360,822 figure is not probability-weighted."],
+  [0,"Treat GTK 500 win-rate conclusions cautiously: only 40 opportunities and 25 closed deals."],
+  [1,"Fix the 500 invalid engage dates to improve data quality for future reporting."]],
+ managers:[["Melvin Marxen",1929,882,2251930,62.2,-0.95],["Summer Sewald",1701,828,1964750,64.3,1.19],["Rocco Neubert",1327,691,1960545,62.1,-1.07],["Celia Rouche",1296,610,1603897,63.4,0.26],["Cara Losch",964,480,1130049,64.4,1.28],["Dustin Brinkmann",1583,747,1094363,63.0,-0.17]],
+ regions:[["West",2997,3568647,63.9],["Central",3512,3346293,62.6],["East",2291,3090594,63.0]],
+ /* [agent, manager, closed deals, won revenue, win rate] */
+ agents:[["Darcel Schlecht","Melvin Marxen",553,1153214,63.1],["Vicki Laflamme","Celia Rouche",347,478396,63.7],["Kary Hendrixson","Summer Sewald",335,454298,62.4],["Cassey Cress","Rocco Neubert",261,450489,62.5],["Donn Cantrell","Rocco Neubert",275,445860,57.5],["Reed Clapper","Rocco Neubert",237,438336,65.4],["Zane Levy","Summer Sewald",261,430068,61.7],["Corliss Cosme","Cara Losch",229,421036,65.5],["James Ascencio","Summer Sewald",206,413533,65.5],["Daniell Hammack","Rocco Neubert",187,364229,61.0],["Maureen Marcano","Summer Sewald",213,350395,70.0],["Gladys Colclough","Melvin Marxen",232,345674,58.2],["Markita Hansen","Celia Rouche",227,328792,57.3],["Kami Bicknell","Summer Sewald",272,316456,64.0],["Marty Freudenburg","Melvin Marxen",194,291195,62.9],["Elease Gluck","Celia Rouche",126,289195,63.5],["Jonathan Berthelot","Melvin Marxen",264,284886,64.8],["Anna Snelling","Dustin Brinkmann",336,275056,61.9],["Hayden Neloms","Celia Rouche",152,272111,70.4],["Boris Faz","Rocco Neubert",153,261631,66.0],["Rosalina Dieter","Celia Rouche",110,235403,65.5],["Rosie Papadopoulos","Cara Losch",121,230169,64.5],["Cecily Lampkin","Dustin Brinkmann",160,229800,66.9],["Moses Frase","Dustin Brinkmann",195,207182,66.2],["Garret Kinder","Cara Losch",123,197773,61.0],["Lajuana Vencill","Dustin Brinkmann",231,194632,55.0],["Versie Hillebrand","Dustin Brinkmann",264,187693,66.7],["Niesha Huffines","Melvin Marxen",175,176961,60.0],["Wilburn Farren","Cara Losch",79,157640,69.6],["Violet Mclelland","Cara Losch",193,123431,63.2]],
+ quarters:[["2017-Q1",531,647,1134672,82.1,null],["2017-Q2",1254,2032,3086111,61.7,172.0],["2017-Q3",1257,2047,2982255,61.4,-3.4],["2017-Q4",1196,1985,2802496,60.3,-6.0]],
+ newOpps:[["2016-Q4",358,null],["2017-Q1",1619,352.2],["2017-Q2",2388,47.5],["2017-Q3",2770,16.0],["2017-Q4",1165,-57.9]],
+ products:[["GTXPro",1480,1147,3510578,63.6],["GTX Plus Pro",968,745,2629651,64.3],["MG Advanced",1412,1084,2216387,60.3],["GTX Plus Basic",1383,1051,705275,62.1],["GTX Basic",1866,1436,499263,63.7],["GTK 500",40,25,400612,60.0],["MG Special",1651,1223,43768,64.8]],
+ sectors:[["Retail",1397,799,1867528,63.1],["Technology",1165,671,1515487,63.4],["Medical",1051,592,1359595,62.3],["Software",757,450,1077934,63.9],["Finance",678,375,950908,61.2],["Marketing",674,404,922321,64.8],["Entertainment",451,260,689007,64.7],["Telecommunications",501,285,653574,62.5],["Services",390,223,533006,63.4],["Employment",311,179,436174,62.6]],
+ accounts:[["Kan-code","Software",196,115,341455],["Konex","Technology",178,108,269245],["Condax","Medical",170,105,206410],["Cheers","Entertainment",98,57,198020],["Hottechi","Technology",200,111,194957]],
+ notes:["333 open opportunities had no exact product list-price match and are excluded from the potential-to-close estimate.","Agents with fewer than five closed deals are marked as having an insufficient sample.","Sector label \"technolgy\" in the source report is displayed here as \"Technology\"."]
+};
+/* ================================================================= */
+const $=id=>document.getElementById(id),O=D.overall;
+const n=v=>Math.round(v).toLocaleString("en-US"),m=v=>"$"+n(v),pc=v=>v.toFixed(1)+"%";
+const q=v=>v==null?"N/A":`<span class="${v>=0?"pos":"neg"}">${v>0?"+":""}${v.toFixed(1)}%</span>`;
+function table(id,head,rows){$(id).innerHTML=`<thead><tr>${head.map((h,i)=>`<th class="${i==0?"l":""}">${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody>`}
+function bars(id,items,fmt,alt){const mx=Math.max(...items.map(i=>i[1]));$(id).innerHTML=items.map(([l,v])=>`<div class="row ${alt?"alt":""}"><span class="l" title="${l}">${l}</span><span class="t"><i style="width:${v/mx*100}%"></i></span><span class="v">${fmt(v)}</span></div>`).join("")}
+const short=v=>v>=1e6?(v/1e6).toFixed(2)+"M":v>=1e3?Math.round(v/1e3)+"K":v;
+
+$("brand").textContent=D.brand;
+$("lede").textContent=`${m(O.revenue)} recorded won revenue from ${n(O.wonDeals)} won deals at a ${O.winRate}% overall win rate.`;
+$("kpis").innerHTML=[[m(O.revenue),"Total sales"],[m(O.avgDeal.toFixed(0)).replace(/^\$/,"$")+"","Avg per won deal"],[O.weeks.toFixed(2),"Avg weeks to close"],[n(O.newOpps),"New opportunities"],[n(O.openOpps),"Open opportunities"],[m(O.pipeline),"Potential to close"],[O.winRate.toFixed(1)+"%","Overall win rate"]].map(([b,l])=>`<div class="kpi"><b>${b}</b><span>${l}</span></div>`).join("");
+$("kpis").children[1].firstChild.textContent="$"+O.avgDeal.toLocaleString("en-US",{minimumFractionDigits:2});
+$("nav").innerHTML=[["summary","Summary"],["findings","Findings"],["recs","Recommendations"],["teams","Teams"],["agents","Agents"],["trends","Trends"],["products","Products"],["sectors","Sectors"],["notes","Notes"]].map(([i,t])=>`<a href="#${i}">${t}</a>`).join("");
+$("sumText").textContent=D.summary;$("callout").textContent=D.callout;
+$("flags").innerHTML=D.flags.map(f=>`<span class="flag">${f}</span>`).join("");
+$("findGrid").innerHTML=D.findings.map(([h,p])=>`<div class="card finding"><h3>${h}</h3><p>${p}</p></div>`).join("");
+$("recList").innerHTML=D.recs.map(([hi,t])=>`<li class="${hi?"hi":""}">${t}</li>`).join("");
+
+bars("chMgr",D.managers.map(r=>[r[0],r[3]]),short);
+bars("chReg",D.regions.map(r=>[r[0],r[2]]),short);
+table("tMgr",["Manager team","Opportunities","Won deals","Won revenue","Win rate","Vs overall (pp)"],D.managers.map(r=>[r[0],n(r[1]),n(r[2]),m(r[3]),pc(r[4]),q(r[5]).replace("%","")]));
+table("tReg",["Region","Opportunities","Won revenue","Win rate"],D.regions.map(r=>[r[0],n(r[1]),m(r[2]),pc(r[3])]));
+
+$("ow").textContent=O.winRate+"%";
+let sortKey=3,asc=false;
+function agents(){const H=["Agent","Manager","Closed deals","Won revenue","Win rate","Comparison"],rows=D.agents.slice().sort((a,b)=>{const x=a[sortKey],y=b[sortKey];return (typeof x=="string"?x.localeCompare(y):x-y)*(asc?1:-1)});
+ $("tAgent").innerHTML=`<thead><tr>${H.map((h,i)=>`<th class="s ${i<2?"l":""}" data-k="${i}">${h}${i==sortKey?(asc?" ▲":" ▼"):""}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td class="l">${r[1]}</td><td>${n(r[2])}</td><td>${m(r[3])}</td><td>${pc(r[4])}</td><td>${r[4]>=O.winRate?'<span class="tag p">at or above</span>':'<span class="tag n">below</span>'}</td></tr>`).join("")}</tbody>`}
+$("tAgent").addEventListener("click",e=>{const k=e.target.dataset.k;if(k==null)return;const i=+k;if(i==5)return;asc=(sortKey==i)?!asc:(i<2);sortKey=i;agents()});
+agents();
+
+bars("chQ",D.quarters.map(r=>[r[0],r[3]]),short);
+bars("chN",D.newOpps.map(r=>[r[0],r[1]]),n,true);
+table("tQ",["Close quarter","Won deals","Closed deals","Won revenue","Win rate","QoQ revenue"],D.quarters.map(r=>[r[0],n(r[1]),n(r[2]),m(r[3]),pc(r[4]),q(r[5])]));
+table("tN",["Engage quarter","New opportunities","QoQ change"],D.newOpps.map(r=>[r[0],n(r[1]),q(r[2])]));
+
+bars("chP",D.products.map(r=>[r[0],r[3]]),short);
+bars("chPW",D.products.map(r=>[r[0],r[4]]),v=>v.toFixed(1)+"%",true);
+table("tP",["Product","Opportunities","Closed deals","Won revenue","Win rate"],D.products.map(r=>[r[0],n(r[1]),n(r[2]),m(r[3]),pc(r[4])]));
+bars("chS",D.sectors.map(r=>[r[0],r[3]]),short);
+bars("chA",D.accounts.map(r=>[r[0],r[4]]),short,true);
+table("tS",["Sector","Opportunities","Won deals","Won revenue","Win rate"],D.sectors.map(r=>[r[0],n(r[1]),n(r[2]),m(r[3]),pc(r[4])]));
+table("tA",["Account","Sector","Opportunities","Won deals","Won revenue"],D.accounts.map(r=>[r[0],`<span style="text-align:left">${r[1]}</span>`,n(r[2]),n(r[3]),m(r[4])]));
+
+$("notesBox").innerHTML="<ul style='margin:0;padding-left:18px'>"+D.notes.map(t=>`<li>${t}</li>`).join("")+"</ul>";
+$("foot").textContent=D.brand+" · Sales performance report";
+$("pdf").onclick=()=>window.print();
+$("theme").onclick=()=>{const d=document.documentElement;d.dataset.theme=getComputedStyle(d).colorScheme.includes("dark")?"light":"dark"};
+</script>
+</body>
+</html>

@@ -22,8 +22,9 @@ QUERY    analyze -> retrieve -> [plan_sql <-> execute_sql] -> answer -> verify
     python -m veriti_rag.cli ask "Which product has the highest price?" --report question_report.pdf
     python -m veriti_rag.cli report --output dataset_insights.pdf
     python -m veriti_rag.cli report --clean yes --output business_insights.pdf
-    python -m veriti_rag.cli sales-report --output sales_report.pdf
+    python -m veriti_rag.cli sales-report --output-dir report_output
     python -m veriti_rag.cli sales-report --prompt "Emphasize product conversion"
+    python render_report.py sales_report_data.json rendered_report --pdf
     python -m veriti_rag.cli eval evaluation/retrieval_eval.jsonl
     pytest            # offline: fake LLM + hash embeddings, no key needed
 
@@ -31,7 +32,9 @@ QUERY    analyze -> retrieve -> [plan_sql <-> execute_sql] -> answer -> verify
 
   Use `report --clean` (or `report --clean yes`) for a concise PDF containing only business insights, recommendations, and charts. Pass `--clean no` to explicitly request the full report.
 
-  `sales-report` creates a business-focused PDF through a bounded prompt-enhancement, planning, coverage-review, and narrative workflow. Python/DuckDB calculates the report metrics; this command does not use Chroma or retrieve knowledge-base content. It requires `OPENROUTER_API_KEY` for the planning and narrative steps. The report includes won revenue, average won deal value, sales-cycle weeks, team and agent performance, quarter-over-quarter results, product win rates, sector sales, top products, and the top five accounts. Open-pipeline potential is estimated from matching product list prices, is not booked revenue or a probability-weighted forecast, and excludes opportunities without a matching catalog price.
+  `sales-report` writes versioned artifacts under `report_output/` by default, for example `sales_report_v1.pdf`, `sales_report_v1.html`, `sales_report_data_v1.json` (the exact template payload), and `sales_report_extracted_v1.json` (raw deterministic analysis results for validation). Each run increments the version without overwriting earlier outputs. Use `--output-dir PATH` to choose another directory. Python/DuckDB calculates the report metrics; this command does not use Chroma or retrieve knowledge-base content. It requires `OPENROUTER_API_KEY` for the planning and narrative steps. The report includes won revenue, average won deal value, sales-cycle weeks, team and agent performance, quarter-over-quarter results, product win rates, sector sales, top products, and the top five accounts. Open-pipeline potential is estimated from matching product list prices, is not booked revenue or a probability-weighted forecast, and excludes opportunities without a matching catalog price.
+
+  `render_report.py DATA_JSON OUT_DIR` renders an existing template-compatible JSON file to HTML. Add `--pdf` to export through Playwright Chromium; install it with `pip install playwright` and `playwright install chromium`.
 
 ## Models (env vars)
     VERITI_MODEL=anthropic/claude-opus-5.5          # any OpenRouter chat slug

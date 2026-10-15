@@ -1,10 +1,14 @@
 """python -m veriti_rag.cli ingest | ask "question" | report | sales-report | eval FILE | stats"""
 import argparse
+import json
+import re
+from pathlib import Path
 
 from .config import Settings
 from .models import make_embeddings, make_llm
 from .reports import create_dataset_report, create_sales_report
 from .sales_report_agent import run_sales_report_agent
+from render_report import render_report_data
 from .store import get_vectorstore
 
 
@@ -57,6 +61,45 @@ def parse_bool(value):
     raise argparse.ArgumentTypeError("expected yes/no, true/false, 1/0, or on/off")
 
 
+def _versioned_report_paths(args):
+    output_dir = Path(args.output_dir)
+    pdf_base = Path(args.output) if args.output else output_dir / "sales_report.pdf"
+    base_dir = pdf_base.parent if args.output else output_dir
+    stem = pdf_base.stem
+    html_base = Path(args.html_output) if args.html_output else base_dir / f"{stem}.html"
+    data_base = Path(args.data_output) if args.data_output else base_dir / f"{stem}_data.json"
+    extract_base = Path(args.extract_output) if args.extract_output else base_dir / f"{stem}_extracted.json"
+
+    base_dir.mkdir(parents=True, exist_ok=True)
+    version_pattern = re.compile(rf"^{re.escape(stem)}.*_v(\d+)(?:\.[^.]+)?$")
+    existing_versions = [
+        int(match.group(1))
+        for path in base_dir.iterdir()
+        if (match := version_pattern.match(path.name))
+    ]
+    version = max(existing_versions, default=0) + 1
+
+    def numbered(path):
+        path = Path(path)
+        return path.with_name(f"{path.stem}_v{version}{path.suffix}")
+
+    paths = {
+        "pdf": numbered(pdf_base),
+        "html": numbered(html_base),
+        "data": numbered(data_base),
+        "extract": numbered(extract_base),
+    }
+    while any(path.exists() for path in paths.values()):
+        version += 1
+        paths = {
+            "pdf": numbered(pdf_base),
+            "html": numbered(html_base),
+            "data": numbered(data_base),
+            "extract": numbered(extract_base),
+        }
+    return paths
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="veriti_rag")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -77,7 +120,16 @@ def main(argv=None):
     r.add_argument("--clean", nargs="?", const=True, default=False, type=parse_bool, metavar="yes|no",
                    help="Include only business insights, recommendations, and charts")
     sr = sub.add_parser("sales-report", help="Create an agentic sales performance PDF")
-    sr.add_argument("--output", default="sales_report.pdf", metavar="PATH")
+    sr.add_argument("--output-dir", default="report_output", metavar="DIR",
+                    help="Directory for versioned report artifacts (default: report_output)")
+    sr.add_argument("--output", default=None, metavar="PATH",
+                    help="Optional PDF base path; outputs are still versioned")
+    sr.add_argument("--data-output", default=None, metavar="PATH",
+                    help="Save the template-compatible structured report JSON")
+    sr.add_argument("--extract-output", default=None, metavar="PATH",
+                    help="Save the deterministic DuckDB extraction JSON for validation")
+    sr.add_argument("--html-output", default=None, metavar="PATH",
+                    help="Save the rendered HTML report (defaults beside the PDF)")
     sr.add_argument("--prompt", default="", help="Optional extra focus for the fixed sales report")
     args = ap.parse_args(argv)
 
@@ -104,9 +156,22 @@ def main(argv=None):
         print(f"Dataset insights report saved to {output}")
     elif args.cmd == "sales-report":
         from .db import load_csvs
+        paths = _versioned_report_paths(args)
         result = run_sales_report_agent(load_csvs(s.data_dir), make_llm(s), args.prompt)
-        output = create_sales_report(result, args.output)
+        output = create_sales_report(result, paths["pdf"])
+        paths["data"].write_text(
+            json.dumps(result["template_data"], indent=2, ensure_ascii=False, allow_nan=False) + "\n",
+            encoding="utf-8",
+        )
+        paths["extract"].write_text(
+            json.dumps(result["report_data"], indent=2, ensure_ascii=False, allow_nan=False) + "\n",
+            encoding="utf-8",
+        )
+        render_report_data(result["template_data"], paths["html"])
         print(f"Sales report saved to {output}")
+        print(f"HTML report saved to {paths['html']}")
+        print(f"Template data saved to {paths['data']}")
+        print(f"Extracted analysis saved to {paths['extract']}")
     else:
         from .db import load_csvs
         from .graph import build_graph
