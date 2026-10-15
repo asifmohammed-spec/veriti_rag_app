@@ -1,2 +1,6 @@
 /.venv
 /.vscode
+.pytest-tmp
+veriti_rag_app/data/clients.json
+veriti_rag_app/data/veriti.duckdb
+veriti_rag_app/data/veriti.duckdb.wal

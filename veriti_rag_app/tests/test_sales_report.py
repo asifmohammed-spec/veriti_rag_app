@@ -151,10 +151,20 @@ def test_sales_report_cli_writes_incremented_versioned_outputs(monkeypatch, caps
         observed.update(template_data=data, html=html)
 
     monkeypatch.setattr(cli, "Settings", lambda: Settings(data_dir="data/raw"))
+    monkeypatch.setattr(cli, "settings_for_client", lambda settings, client_id: settings)
+    class DummyConnection:
+        def close(self):
+            pass
+    monkeypatch.setattr(cli, "load_client_csvs", lambda *args: DummyConnection())
     monkeypatch.setattr(cli, "make_llm", lambda settings: "fake-model")
     monkeypatch.setattr(cli, "make_embeddings", lambda settings: (_ for _ in ()).throw(AssertionError("embeddings must not be loaded")))
     monkeypatch.setattr(cli, "get_vectorstore", lambda *args: (_ for _ in ()).throw(AssertionError("vector store must not be loaded")))
-    monkeypatch.setattr(cli, "run_sales_report_agent", lambda con, llm, prompt: observed.update(prompt=prompt, llm=llm) or expected_result)
+    monkeypatch.setattr(
+        cli, "run_sales_report_agent",
+        lambda con, llm, prompt, **kwargs: observed.update(
+            prompt=prompt, llm=llm, **kwargs
+        ) or expected_result,
+    )
     monkeypatch.setattr(cli, "create_sales_report", write_pdf)
     monkeypatch.setattr(cli, "render_report_data", write_html)
 
@@ -166,6 +176,10 @@ def test_sales_report_cli_writes_incremented_versioned_outputs(monkeypatch, caps
     expected_html = output_dir / "sales_report_v1.html"
     expected_data = output_dir / "sales_report_data_v1.json"
     expected_extracted = output_dir / "sales_report_extracted_v1.json"
+    assert observed["client_id"] == "maven_demo"
+    assert observed["thread_id"]
+    observed.pop("client_id")
+    observed.pop("thread_id")
     assert observed == {
         "prompt": "emphasize conversion", "llm": "fake-model",
         "template_data": template_data, "html": expected_html,

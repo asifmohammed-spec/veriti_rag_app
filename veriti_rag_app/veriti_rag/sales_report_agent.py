@@ -245,7 +245,7 @@ def build_sales_report_agent(con, llm):
     return workflow.compile()
 
 
-def run_sales_report_agent(con, llm, user_prompt="", thread_id=None):
+def run_sales_report_agent(con, llm, user_prompt="", thread_id=None, client_id=None):
     """Run the sales report workflow and return data plus business narrative."""
 
     config = {"configurable": {"thread_id": thread_id}} if thread_id else None
@@ -258,6 +258,9 @@ def run_sales_report_agent(con, llm, user_prompt="", thread_id=None):
         wait_for_all_tracers()
 
     result["template_data"] = build_template_data(result)
+    if client_id:
+        result["client_id"] = client_id
+        result["template_data"]["client_id"] = client_id
     return result
 
 

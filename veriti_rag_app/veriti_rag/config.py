@@ -16,6 +16,7 @@ class Settings:
     kb_dir: str = _e("VERITI_KB_DIR", "knowledge_base")
     data_dir: str = _e("VERITI_DATA_DIR", "data/raw")
     index_dir: str = _e("VERITI_INDEX_DIR", "vector_index")
+    duckdb_path: str = _e("VERITI_DUCKDB_PATH", "data/veriti.duckdb")
     client_id: str = _e("VERITI_CLIENT_ID", "maven_demo")
     # OpenRouter (OpenAI-compatible) for both chat and embeddings
     base_url: str = _e("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")

@@ -55,11 +55,26 @@ Install dependencies with `pip install -r requirements.txt`, then configure thes
 LangChain and LangGraph calls are traced automatically when tracing is enabled; no application code changes or callbacks are required. Traces can include prompts, model inputs and outputs, retrieved knowledge-base text, generated SQL, and report data. Review your data-handling requirements before enabling tracing for customer or sensitive data. Leave `LANGSMITH_TRACING` unset or set it to `false` to keep tracing disabled.
 
 ## Your data
-- CSVs in data/raw/ (table name = file name).
-- Reference files in knowledge_base/<client_id>/ ; set VERITI_CLIENT_ID.
+- Existing `maven_demo` CSVs in `data/raw/` remain supported. New clients store CSVs in `data/raw/<client_id>/`.
+- Client knowledge files live in `knowledge_base/<client_id>/`.
+- Chroma indexes live in `vector_index/<client_id>/` for new clients; retrieval also requires a `client_id` metadata filter.
+- Client definitions are stored in `data/clients.json`. Shared, namespaced client tables are stored in `data/veriti.duckdb`; each RAG/report run copies only the selected client's tables into an isolated query connection.
   File name decides doc_type (schema*, *dictionary*, *mapping*, drc*, *rule*,
   bsd*, remediation*, technical*, handover*, business_profile*).
   Bump `version` in _meta.yml to force a re-embed of that client's chunks.
+
+## Multiple clients
+Run the existing Streamlit UI with:
+
+    python -m streamlit run streamlit_app.py
+
+Choose a client in the sidebar or create one there. The app creates its client folders and registry entry, then provides separate knowledge-file and CSV upload, deletion, indexing, RAG-query, and sales-report workflows. Re-indexing and deletion are scoped to the selected client's Chroma metadata or DuckDB tables.
+
+The CLI continues to default to `maven_demo`. Select another registered client explicitly, for example:
+
+    python -m veriti_rag.cli ingest --client-id north_star_health
+    python -m veriti_rag.cli sales-report --client-id north_star_health --prompt "Emphasize product conversion"
+    python -m veriti_rag.cli ask --client-id north_star_health "How many opportunities are open?"
 
 ## Removed vs the previous version (to simplify)
 Custom chunker, BM25 hybrid retrieval (+RRF), LLM chunk grading, query rewrite loop,
